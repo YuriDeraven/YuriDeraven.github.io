@@ -3,200 +3,216 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Yuri Olorunfemi | Full-Stack Developer & Digital Strategist</title>
+    <title>Yuri Olorunfemi | Portfolio</title>
     
     <link rel="icon" type="image/png" href="images/favicon.png">
-
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <script>
+        // Speed optimization: Immediate Theme Check
+        if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            document.documentElement.classList.add('dark')
+        } else {
+            document.documentElement.classList.remove('dark')
+        }
+    </script>
+
     <style>
-        body { background-color: #0f172a; color: #f8fafc; scroll-behavior: smooth; font-family: sans-serif;}
-        .glass { background: rgba(30, 41, 59, 0.7); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.1); }
-        .gradient-text { background: linear-gradient(90deg, #38bdf8, #818cf8); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-        .project-card:hover { border-color: #38bdf8; transform: translateY(-5px); transition: all 0.3s ease; }
-        .skill-badge { background: rgba(56, 189, 248, 0.1); color: #38bdf8; border: 1px solid rgba(56, 189, 248, 0.2); }
+        /* Custom Variables & Smooth Transitions */
+        :root { --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
+        html { scroll-behavior: smooth; }
+        body { transition: var(--transition); }
+        
+        .dark body { background-color: #0f172a; color: #f8fafc; }
+        body { background-color: #f8fafc; color: #0f172a; }
+
+        .glass { 
+            background: rgba(255, 255, 255, 0.7); 
+            backdrop-filter: blur(12px); 
+            border: 1px solid rgba(0,0,0,0.05); 
+        }
+        .dark .glass { 
+            background: rgba(30, 41, 59, 0.7); 
+            border: 1px solid rgba(255,255,255,0.1); 
+        }
+
+        .gradient-text { 
+            background: linear-gradient(90deg, #0ea5e9, #6366f1); 
+            -webkit-background-clip: text; 
+            -webkit-text-fill-color: transparent; 
+        }
+
+        /* Hover Effects */
+        .hover-lift { transition: var(--transition); }
+        .hover-lift:hover { transform: translateY(-8px); box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1); }
+        
+        .status-dot {
+            height: 10px; width: 10px;
+            background-color: #22c55e;
+            border-radius: 50%;
+            display: inline-block;
+            box-shadow: 0 0 8px #22c55e;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.7); }
+            70% { transform: scale(1); box-shadow: 0 0 0 10px rgba(34, 197, 94, 0); }
+            100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(34, 197, 94, 0); }
+        }
     </style>
 </head>
-<body>
+<body class="antialiased font-sans">
 
-    <nav class="fixed w-full z-50 glass py-4 px-6 flex justify-between items-center">
+    <nav class="fixed w-full z-50 glass py-3 px-6 flex justify-between items-center transition-all">
         <h1 class="text-xl font-bold gradient-text">Yuri Olorunfemi</h1>
-        <div class="space-x-6 hidden md:block text-sm">
-            <a href="#about" class="hover:text-sky-400 transition">About</a>
-            <a href="#wp-projects" class="hover:text-sky-400 transition">WordPress</a>
-            <a href="#fullstack" class="hover:text-sky-400 transition">Full-Stack</a>
-            <a href="#skills" class="hover:text-sky-400 transition">Skills</a>
-            <a href="https://www.linkedin.com/in/yuri-olorunfemi-35b684173/" target="_blank" class="bg-sky-500 px-4 py-2 rounded-lg font-medium hover:bg-sky-600 transition text-white">Contact Me</a>
+        
+        <div class="flex items-center space-x-8">
+            <div class="hidden md:flex space-x-6 text-sm font-medium">
+                <a href="#wp-projects" class="hover:text-sky-500 transition">WordPress</a>
+                <a href="#fullstack" class="hover:text-sky-500 transition">Full-Stack</a>
+                <a href="#skills" class="hover:text-sky-500 transition">Skills</a>
+            </div>
+            
+            <button id="theme-toggle" class="p-2 rounded-lg bg-slate-200 dark:bg-slate-800 hover:ring-2 ring-sky-400 transition">
+                <i id="theme-icon" class="fas fa-moon text-slate-700 dark:text-yellow-400"></i>
+            </button>
+            
+            <a href="https://www.linkedin.com/in/yuri-olorunfemi-35b684173/" target="_blank" class="bg-sky-500 px-5 py-2 rounded-full text-white text-sm font-bold hover:bg-sky-600 transition shadow-lg shadow-sky-500/30">Contact</a>
         </div>
     </nav>
 
-    <section id="about" class="pt-32 pb-20 px-6">
-        <div class="max-w-6xl mx-auto flex flex-col md:flex-row items-center gap-12">
-            <div class="w-48 h-48 md:w-64 md:h-64 rounded-full overflow-hidden border-4 border-slate-700 shadow-xl flex-shrink-0">
-                <img src="images/profile.png" alt="Yuri Olorunfemi" class="w-full h-full object-cover">
+    <section class="pt-40 pb-20 px-6 max-w-7xl mx-auto">
+        <div class="flex flex-col md:flex-row items-center gap-16">
+            <div class="relative group">
+                <div class="absolute -inset-1 bg-gradient-to-r from-sky-500 to-indigo-500 rounded-full blur opacity-25 group-hover:opacity-50 transition duration-1000"></div>
+                <div class="relative w-56 h-56 md:w-72 md:h-72 rounded-full overflow-hidden border-2 border-white/10 shadow-2xl">
+                    <img src="images/profile.png" alt="Yuri Olorunfemi" class="w-full h-full object-cover transform hover:scale-110 transition duration-700">
+                </div>
             </div>
-            <div class="flex-grow">
-                <h2 class="text-4xl md:text-6xl font-extrabold mb-6 leading-tight text-center md:text-left">Engineering <span class="gradient-text">Digital Growth.</span></h2>
-                <div class="max-w-3xl space-y-4 text-slate-400 text-lg text-center md:text-left">
-                    <p>I am a **Full-Stack Developer and Digital Strategist** dedicated to building robust web applications and high-conversion WordPress ecosystems. I bridge the gap between complex backend logic and seamless frontend interfaces.</p>
-                    <p class="border-l-4 border-sky-500/50 pl-4 bg-slate-800/50 py-3 rounded-r-lg text-base">
-                        With expertise spanning FinTech, MedTech, and EdTech, I specialize in developing custom management systems and optimizing large-scale platforms to be scalable, secure, and business-driven.
-                    </p>
+
+            <div class="text-center md:text-left space-y-6">
+                <div class="inline-flex items-center space-x-2 bg-slate-200 dark:bg-slate-800 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider">
+                    <span class="status-dot"></span>
+                    <span>Available for new projects</span>
+                </div>
+                <h2 class="text-5xl md:text-7xl font-black leading-tight">Solving Problems with <span class="gradient-text">Clean Code.</span></h2>
+                <p class="max-w-2xl text-lg text-slate-500 dark:text-slate-400">
+                    I build full-stack digital solutions for SMEs and high-growth startups. From complex POS systems to high-traffic news platforms, I engineer growth through technical excellence.
+                </p>
+                
+                <div class="grid grid-cols-2 md:grid-cols-3 gap-4 pt-4">
+                    <div class="p-4 rounded-xl border border-slate-200 dark:border-slate-800 bg-white/50 dark:bg-slate-900/50">
+                        <span class="block text-2xl font-bold">5+ Years</span>
+                        <span class="text-xs text-slate-400 uppercase font-bold">Experience</span>
+                    </div>
+                    <div class="p-4 rounded-xl border border-slate-200 dark:border-slate-800 bg-white/50 dark:bg-slate-900/50">
+                        <span class="block text-2xl font-bold">40+</span>
+                        <span class="text-xs text-slate-400 uppercase font-bold">Projects Done</span>
+                    </div>
+                    <div class="p-4 rounded-xl border border-slate-200 dark:border-slate-800 bg-white/50 dark:bg-slate-900/50 col-span-2 md:col-span-1">
+                        <span class="block text-2xl font-bold">100%</span>
+                        <span class="text-xs text-slate-400 uppercase font-bold">Client Success</span>
+                    </div>
                 </div>
             </div>
         </div>
     </section>
 
-    <section id="wp-projects" class="py-20 px-6 bg-slate-900/50">
+    <section id="wp-projects" class="py-24 px-6 bg-slate-50 dark:bg-slate-900/30">
         <div class="max-w-7xl mx-auto">
-            <h3 class="text-3xl font-bold mb-12 text-center text-sky-400">WordPress Ecosystems</h3>
+            <div class="mb-12 text-center">
+                <h3 class="text-3xl font-black mb-2 uppercase tracking-tighter">WordPress Ecosystems</h3>
+                <div class="h-1 w-20 bg-sky-500 mx-auto rounded-full"></div>
+            </div>
+            
             <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-
-                <div class="glass p-4 rounded-2xl project-card border border-slate-800">
-                    <div class="h-48 bg-slate-800 rounded-xl mb-4 overflow-hidden">
-                        <img src="images/DeFi Planet.png" alt="DeFi Planet" class="w-full h-full object-cover">
+                <div class="glass p-4 rounded-3xl hover-lift">
+                    <div class="h-52 rounded-2xl mb-4 overflow-hidden border border-slate-200 dark:border-slate-800">
+                        <img src="images/DeFi Planet.png" class="w-full h-full object-cover hover:scale-105 transition duration-500">
                     </div>
-                    <h4 class="font-bold text-lg mb-2 text-sky-400">DeFi Planet</h4>
-                    <p class="text-slate-400 text-sm">High-traffic Web3 news platform optimized for performance and ad-tech integration.</p>
+                    <h4 class="font-bold text-xl mb-1 px-2">DeFi Planet</h4>
+                    <p class="text-slate-500 dark:text-slate-400 text-sm px-2">Web3 news platform optimized for massive traffic.</p>
+                </div>
+                
+                <div class="glass p-4 rounded-3xl hover-lift">
+                    <div class="h-52 rounded-2xl mb-4 overflow-hidden border border-slate-200 dark:border-slate-800">
+                        <img src="images/Albarka Shuttle Services.png" class="w-full h-full object-cover hover:scale-105 transition duration-500">
+                    </div>
+                    <h4 class="font-bold text-xl mb-1 px-2">Albarka Shuttle</h4>
+                    <p class="text-slate-400 text-sm px-2">Logistics platform with real-time booking integration.</p>
                 </div>
 
-                <div class="glass p-4 rounded-2xl project-card border border-slate-800">
-                    <div class="h-48 bg-slate-800 rounded-xl mb-4 overflow-hidden">
-                        <img src="images/Barek Charity.png" alt="Barek Organization" class="w-full h-full object-cover">
+                <div class="glass p-4 rounded-3xl hover-lift">
+                    <div class="h-52 rounded-2xl mb-4 overflow-hidden border border-slate-200 dark:border-slate-800">
+                        <img src="images/Paycluster.png" class="w-full h-full object-cover hover:scale-105 transition duration-500">
                     </div>
-                    <h4 class="font-bold text-lg mb-2 text-sky-400">Barek Organization</h4>
-                    <p class="text-slate-400 text-sm">Empathetic design for an NGO focused on community impact and donation management.</p>
+                    <h4 class="font-bold text-xl mb-1 px-2">Paycluster</h4>
+                    <p class="text-slate-400 text-sm px-2">FinTech landing page built for high lead conversion.</p>
                 </div>
-
-                <div class="glass p-4 rounded-2xl project-card border border-slate-800">
-                    <div class="h-48 bg-slate-800 rounded-xl mb-4 overflow-hidden">
-                        <img src="images/Bakara Care Services.png" alt="Baraka Care" class="w-full h-full object-cover">
-                    </div>
-                    <h4 class="font-bold text-lg mb-2 text-sky-400">Baraka Care Services</h4>
-                    <p class="text-slate-400 text-sm">Healthcare portal for elderly care, emphasizing accessibility and trust.</p>
-                </div>
-
-                <div class="glass p-4 rounded-2xl project-card border border-slate-800">
-                    <div class="h-48 bg-slate-800 rounded-xl mb-4 overflow-hidden">
-                        <img src="images/Paycluster.png" alt="Paycluster" class="w-full h-full object-cover">
-                    </div>
-                    <h4 class="font-bold text-lg mb-2 text-sky-400">Paycluster</h4>
-                    <p class="text-slate-400 text-sm">Corporate fintech landing pages designed for high lead conversion and SEO.</p>
-                </div>
-
-                <div class="glass p-4 rounded-2xl project-card border border-slate-800">
-                    <div class="h-48 bg-slate-800 rounded-xl mb-4 overflow-hidden">
-                        <img src="images/Albarka Shuttle Services.png" alt="Albarka Shuttle" class="w-full h-full object-cover">
-                    </div>
-                    <h4 class="font-bold text-lg mb-2 text-sky-400">Albarka Shuttle</h4>
-                    <p class="text-slate-400 text-sm">Logistics platform featuring real-time booking and support integration.</p>
-                </div>
-
             </div>
         </div>
     </section>
 
-    <section id="fullstack" class="py-20 px-6">
+    <section id="fullstack" class="py-24 px-6">
         <div class="max-w-7xl mx-auto">
-            <h3 class="text-3xl font-bold mb-12 text-center text-indigo-400">Full-Stack Solutions</h3>
+             <div class="mb-12 text-center">
+                <h3 class="text-3xl font-black mb-2 uppercase tracking-tighter text-indigo-500">Full-Stack Repos</h3>
+                <div class="h-1 w-20 bg-indigo-500 mx-auto rounded-full"></div>
+            </div>
+
             <div class="grid md:grid-cols-2 gap-8">
-                
-                <div class="glass p-6 rounded-2xl border border-slate-800 hover:border-indigo-500 transition">
-                    <h4 class="text-xl font-bold mb-2">MORAV RMS</h4>
-                    <div class="flex gap-2 mb-4">
-                        <span class="text-xs font-mono bg-indigo-500/10 text-indigo-400 px-2 py-1 rounded">Next.js 15</span>
-                        <span class="text-xs font-mono bg-indigo-500/10 text-indigo-400 px-2 py-1 rounded">Prisma</span>
-                        <span class="text-xs font-mono bg-indigo-500/10 text-indigo-400 px-2 py-1 rounded">SQLite</span>
+                <div class="p-8 rounded-3xl border border-slate-200 dark:border-slate-800 hover:border-indigo-500 transition bg-white dark:bg-slate-900 shadow-sm hover:shadow-indigo-500/10">
+                    <div class="flex justify-between items-center mb-6">
+                        <i class="fab fa-github text-3xl text-indigo-500"></i>
+                        <span class="text-xs font-mono px-3 py-1 bg-indigo-500/10 text-indigo-400 rounded-full">Next.js 15 • Prisma</span>
                     </div>
-                    <p class="text-slate-400 text-sm mb-4">A comprehensive Hospitality Management System featuring modules for POS, Inventory, and Accounting.</p>
-                    <a href="https://github.com/YuriDeraven" target="_blank" class="text-sky-400 text-sm hover:underline">View Repository →</a>
+                    <h4 class="text-2xl font-bold mb-3">MORAV RMS</h4>
+                    <p class="text-slate-500 dark:text-slate-400 mb-6">A complete Hospitality Management suite: POS, Inventory, and automated Accounting.</p>
+                    <a href="https://github.com/YuriDeraven" target="_blank" class="inline-flex items-center text-indigo-500 font-bold hover:underline">
+                        Explore Source <i class="fas fa-arrow-right ml-2 text-xs"></i>
+                    </a>
                 </div>
 
-                <div class="glass p-6 rounded-2xl border border-slate-800 hover:border-indigo-500 transition">
-                    <h4 class="text-xl font-bold mb-2">JobWay HR Dashboard</h4>
-                    <div class="flex gap-2 mb-4">
-                        <span class="text-xs font-mono bg-indigo-500/10 text-indigo-400 px-2 py-1 rounded">Next.js</span>
-                        <span class="text-xs font-mono bg-indigo-500/10 text-indigo-400 px-2 py-1 rounded">shadcn/ui</span>
-                        <span class="text-xs font-mono bg-indigo-500/10 text-indigo-400 px-2 py-1 rounded">Tailwind</span>
+                <div class="p-8 rounded-3xl border border-slate-200 dark:border-slate-800 hover:border-indigo-500 transition bg-white dark:bg-slate-900 shadow-sm hover:shadow-indigo-500/10">
+                    <div class="flex justify-between items-center mb-6">
+                        <i class="fab fa-github text-3xl text-indigo-500"></i>
+                        <span class="text-xs font-mono px-3 py-1 bg-indigo-500/10 text-indigo-400 rounded-full">TypeScript • PostgreSQL</span>
                     </div>
-                    <p class="text-slate-400 text-sm mb-4">Modern HR-focused dashboard application with advanced UI components for talent management.</p>
-                    <a href="https://github.com/YuriDeraven" target="_blank" class="text-sky-400 text-sm hover:underline">View Repository →</a>
-                </div>
-
-                <div class="glass p-6 rounded-2xl border border-slate-800 hover:border-indigo-500 transition">
-                    <h4 class="text-xl font-bold mb-2">Ajo Digital Ledger</h4>
-                    <div class="flex gap-2 mb-4">
-                        <span class="text-xs font-mono bg-indigo-500/10 text-indigo-400 px-2 py-1 rounded">TypeScript</span>
-                        <span class="text-xs font-mono bg-indigo-500/10 text-indigo-400 px-2 py-1 rounded">Next.js</span>
-                        <span class="text-xs font-mono bg-indigo-500/10 text-indigo-400 px-2 py-1 rounded">PostgreSQL</span>
-                    </div>
-                    <p class="text-slate-400 text-sm mb-4">A financial ledger application designed to track group contributions and personal savings.</p>
-                    <a href="https://github.com/YuriDeraven" target="_blank" class="text-sky-400 text-sm hover:underline">View Repository →</a>
-                </div>
-
-                <div class="glass p-6 rounded-2xl border border-slate-800 hover:border-indigo-500 transition">
-                    <h4 class="text-xl font-bold mb-2">Mini-POS System</h4>
-                    <div class="flex gap-2 mb-4">
-                        <span class="text-xs font-mono bg-indigo-500/10 text-indigo-400 px-2 py-1 rounded">Next.js API</span>
-                        <span class="text-xs font-mono bg-indigo-500/10 text-indigo-400 px-2 py-1 rounded">SQLite</span>
-                        <span class="text-xs font-mono bg-indigo-500/10 text-indigo-400 px-2 py-1 rounded">Radix UI</span>
-                    </div>
-                    <p class="text-slate-400 text-sm mb-4">Lightweight Point-of-Sale system optimized for small business retail and inventory workflows.</p>
-                    <a href="https://github.com/YuriDeraven" target="_blank" class="text-sky-400 text-sm hover:underline">View Repository →</a>
-                </div>
-
-            </div>
-        </div>
-    </section>
-
-    <section id="skills" class="py-20 px-6 bg-slate-900/50">
-        <div class="max-w-6xl mx-auto">
-            <h3 class="text-3xl font-bold mb-16 text-center">Skills & Industries</h3>
-            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-12">
-                
-                <div class="space-y-6">
-                    <h4 class="text-xl font-semibold text-sky-400">Design & Marketing</h4>
-                    <div class="flex flex-wrap gap-3">
-                        <span class="skill-badge px-4 py-2 rounded-full text-sm">Adobe Photoshop/Illustrator</span>
-                        <span class="skill-badge px-4 py-2 rounded-full text-sm">Figma / Canva</span>
-                        <span class="skill-badge px-4 py-2 rounded-full text-sm font-bold">Google Ads / Meta Ads</span>
-                        <span class="skill-badge px-4 py-2 rounded-full text-sm">GA4 / SEO (SEMrush)</span>
-                        <span class="skill-badge px-4 py-2 rounded-full text-sm font-bold">WordPress Expert</span>
-                    </div>
-                </div>
-
-                <div class="space-y-6">
-                    <h4 class="text-xl font-semibold text-indigo-400">Engineering</h4>
-                    <div class="flex flex-wrap gap-3">
-                        <span class="skill-badge px-4 py-2 rounded-full text-sm font-bold">Git/GitHub</span>
-                        <span class="skill-badge px-4 py-2 rounded-full text-sm">JavaScript / Node.js</span>
-                        <span class="skill-badge px-4 py-2 rounded-full text-sm">React / HTML / CSS</span>
-                        <span class="skill-badge px-4 py-2 rounded-full text-sm font-bold">Java</span>
-                        <span class="skill-badge px-4 py-2 rounded-full text-sm font-bold">SQL</span>
-                    </div>
-                </div>
-
-                <div class="glass p-6 rounded-2xl border border-slate-800">
-                    <h4 class="text-xl font-semibold mb-4">Professional Experience</h4>
-                    <ul class="text-slate-400 text-sm space-y-2 list-disc list-inside">
-                        <li>Tech / SaaS & FinTech</li>
-                        <li>Healthcare / MedTech</li>
-                        <li>Education / EdTech</li>
-                        <li>E-commerce / Retail / B2C</li>
-                        <li>Marketing & Advertising</li>
-                    </ul>
+                    <h4 class="text-2xl font-bold mb-3">Ajo Digital Ledger</h4>
+                    <p class="text-slate-500 dark:text-slate-400 mb-6">Financial tracking application for group contributions and community savings.</p>
+                    <a href="https://github.com/YuriDeraven" target="_blank" class="inline-flex items-center text-indigo-500 font-bold hover:underline">
+                        Explore Source <i class="fas fa-arrow-right ml-2 text-xs"></i>
+                    </a>
                 </div>
             </div>
         </div>
     </section>
 
-    <footer class="py-10 text-center border-t border-slate-800">
-        <p class="text-slate-500 italic">"Engineering growth through technical excellence."</p>
-        <div class="mt-6 flex justify-center space-x-6">
-            <a href="https://www.linkedin.com/in/yuri-olorunfemi-35b684173/" target="_blank" class="text-2xl hover:text-sky-400"><i class="fab fa-linkedin"></i></a>
-            <a href="https://github.com/YuriDeraven" target="_blank" class="text-2xl hover:text-white"><i class="fab fa-github"></i></a>
-        </div>
+    <footer class="py-12 text-center text-slate-400 text-sm border-t border-slate-200 dark:border-slate-800">
+        <p>&copy; 2026 Yuri Olorunfemi. Handcrafted with Code.</p>
     </footer>
 
+    <script>
+        const themeToggle = document.getElementById('theme-toggle');
+        const themeIcon = document.getElementById('theme-icon');
+
+        themeToggle.addEventListener('click', () => {
+            document.documentElement.classList.toggle('dark');
+            if (document.documentElement.classList.contains('dark')) {
+                localStorage.theme = 'dark';
+                themeIcon.classList.replace('fa-moon', 'fa-sun');
+            } else {
+                localStorage.theme = 'light';
+                themeIcon.classList.replace('fa-sun', 'fa-moon');
+            }
+        });
+
+        // Initialize icon on load
+        if (document.documentElement.classList.contains('dark')) {
+            themeIcon.classList.replace('fa-moon', 'fa-sun');
+        }
+    </script>
 </body>
 </html>
