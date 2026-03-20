@@ -4,6 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Yuri Olorunfemi | Full-Stack Developer & WP Expert</title>
+    
+    <link rel="icon" type="image/png" href="images/favicon.png">
+
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
@@ -11,27 +14,45 @@
         .glass { background: rgba(30, 41, 59, 0.7); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.1); }
         .gradient-text { background: linear-gradient(90deg, #38bdf8, #818cf8); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
         .project-card:hover { border-color: #38bdf8; transform: translateY(-5px); transition: all 0.3s ease; }
+        .skill-badge { background: rgba(56, 189, 248, 0.1); color: #38bdf8; border: 1px solid rgba(56, 189, 248, 0.2); }
     </style>
 </head>
 <body>
 
     <nav class="fixed w-full z-50 glass py-4 px-6 flex justify-between items-center">
-        <h1 class="text-xl font-bold gradient-text">Yuri Olorunfemi</h1>
-        <div class="space-x-6 hidden md:block">
+        <div class="flex items-center gap-3">
+            <h1 class="text-xl font-bold gradient-text">Yuri Olorunfemi</h1>
+        </div>
+        <div class="space-x-6 hidden md:block text-sm">
             <a href="#about" class="hover:text-sky-400 transition">About</a>
             <a href="#projects" class="hover:text-sky-400 transition">WordPress Projects</a>
-            <a href="#skills" class="hover:text-sky-400 transition">Skills</a>
-            <a href="mailto:your-email@example.com" class="bg-sky-500 px-4 py-2 rounded-lg font-medium hover:bg-sky-600 transition">Contact</a>
+            <a href="#skills" class="hover:text-sky-400 transition">Skills & Industries</a>
+            <a href="https://www.linkedin.com/in/yuri-olorunfemi-35b684173/" target="_blank" class="bg-sky-500 px-4 py-2 rounded-lg font-medium hover:bg-sky-600 transition">Contact Me</a>
         </div>
     </nav>
 
-    <section id="about" class="pt-32 pb-20 px-6 text-center">
-        <div class="max-w-4xl mx-auto">
-            <h2 class="text-5xl md:text-7xl font-extrabold mb-6">Scalable Web Solutions. Built on <span class="gradient-text">WordPress.</span></h2>
-            <p class="text-lg text-slate-400 mb-8">Full-Stack Developer and Digital Marketer specialized in creating high-performance WordPress ecosystems, driving traffic, and optimizing conversions for NGOs and SMEs.</p>
-            <div class="flex justify-center space-x-4">
-                <a href="#projects" class="border border-slate-700 px-6 py-3 rounded-full hover:bg-slate-800 transition">View WordPress Live Projects</a>
-                <a href="https://github.com/YuriDeraven" target="_blank" class="bg-slate-800 px-6 py-3 rounded-full hover:bg-slate-700 transition"><i class="fab fa-github mr-2"></i>GitHub Dev Profile</a>
+    <section id="about" class="pt-32 pb-20 px-6">
+        <div class="max-w-6xl mx-auto flex flex-col md:flex-row items-center gap-12 text-center md:text-left">
+            
+            <div class="w-48 h-48 md:w-64 md:h-64 rounded-full overflow-hidden border-4 border-slate-700 shadow-xl flex-shrink-0">
+                <img src="images/profile.png" alt="Yuri Olorunfemi" class="w-full h-full object-cover">
+            </div>
+
+            <div class="flex-grow">
+                <h2 class="text-4xl md:text-6xl font-extrabold mb-6 leading-tight">Scalable Web Solutions. Supported with <span class="gradient-text">Empathy.</span></h2>
+                
+                <div class="max-w-3xl space-y-4 text-slate-400 text-lg">
+                    <p>I am a versatile **Full-Stack Developer and Digital Marketer** specialized in creating high-performance WordPress ecosystems and optimizing conversions for NGOs and SMEs.</p>
+                    
+                    <p class="border-l-4 border-sky-500/50 pl-4 bg-slate-800/50 py-3 rounded-r-lg text-base">
+                        For "Scale Army Careers," I offer a unique blend of technical mastery and client-centric support. I understand that a technical glitch on a client's site is a business emergency. My background allows me to debug complex plugin/theme conflicts quickly while providing clear, calm guidance to stakeholders.
+                    </p>
+                </div>
+                
+                <div class="flex justify-center md:justify-start space-x-4 mt-10">
+                    <a href="#projects" class="border border-slate-700 px-6 py-3 rounded-full hover:bg-slate-800 transition">View Projects</a>
+                    <a href="https://www.linkedin.com/in/yuri-olorunfemi-35b684173/" target="_blank" class="bg-slate-800 px-6 py-3 rounded-full hover:bg-slate-700 transition"><i class="fab fa-linkedin mr-2"></i>LinkedIn Profile</a>
+                </div>
             </div>
         </div>
     </section>
@@ -39,7 +60,6 @@
     <section id="projects" class="py-20 px-6 bg-slate-900/50">
         <div class="max-w-7xl mx-auto">
             <h3 class="text-3xl font-bold mb-12 text-center">WordPress Showcase</h3>
-            
             <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
 
                 <div class="glass p-6 rounded-2xl project-card border border-slate-800">
@@ -47,7 +67,7 @@
                         <img src="https://defi-planet.com/wp-content/uploads/2022/02/defi_planet_white.png" alt="Defi Planet Logo" class="max-h-16">
                     </div>
                     <h4 class="text-xl font-bold mb-2 text-sky-400">Defi Planet</h4>
-                    <p class="text-slate-400 text-sm mb-4">A high-traffic crypto/web3 news media platform. Managed custom taxonomies and high-volume data performance.</p>
+                    <p class="text-slate-400 text-sm mb-4">High-traffic crypto/web3 news platform. Optimized for performance and high-volume data handling.</p>
                     <span class="text-xs bg-sky-500/20 text-sky-400 px-2 py-1 rounded">Media/Web3</span>
                     <a href="https://defi-planet.com/" target="_blank" class="text-xs text-slate-500 ml-2 hover:text-white">Visit Site →</a>
                 </div>
@@ -57,7 +77,7 @@
                         <img src="https://barekorganization.com/wp-content/uploads/2023/10/Logo-barek-2-e1698236171801.png" alt="Barek Org Logo" class="max-h-24">
                     </div>
                     <h4 class="text-xl font-bold mb-2 text-sky-400">Barek Organization</h4>
-                    <p class="text-slate-400 text-sm mb-4">Official website for a Charity Foundation. Features custom post types for donation drives and community impact tracking.</p>
+                    <p class="text-slate-400 text-sm mb-4">Official website for a Charity Foundation. Custom-built for donation drives and community impact tracking.</p>
                     <span class="text-xs bg-red-500/20 text-red-400 px-2 py-1 rounded">NGO/Charity</span>
                     <a href="https://barekorganization.com/" target="_blank" class="text-xs text-slate-500 ml-2 hover:text-white">Visit Site →</a>
                 </div>
@@ -67,8 +87,8 @@
                         <img src="https://www.barakacareservices.com/wp-content/uploads/2024/05/logo.jpg" alt="Baraka Care Logo" class="max-h-20 rounded-lg">
                     </div>
                     <h4 class="text-xl font-bold mb-2 text-sky-400">Baraka Care Services</h4>
-                    <p class="text-slate-400 text-sm mb-4">Healthcare platform providing care for patients and the elderly. Focused on accessibility and empathetic UI/UX.</p>
-                    <span class="text-xs bg-blue-500/20 text-blue-400 px-2 py-1 rounded">Healthcare/Elderly Care</span>
+                    <p class="text-slate-400 text-sm mb-4">Healthcare platform for patient and elderly care. Focused on accessibility and empathetic UI design.</p>
+                    <span class="text-xs bg-blue-500/20 text-blue-400 px-2 py-1 rounded">Healthcare</span>
                     <a href="https://www.barakacareservices.com/" target="_blank" class="text-xs text-slate-500 ml-2 hover:text-white">Visit Site →</a>
                 </div>
 
@@ -77,7 +97,7 @@
                         <img src="https://www.albarkashuttle.com/wp-content/uploads/2024/09/cropped-Albarka-Shuttle-03-3.png" alt="Albarka Shuttle Logo" class="max-h-24">
                     </div>
                     <h4 class="text-xl font-bold mb-2 text-sky-400">Albarka Shuttle</h4>
-                    <p class="text-slate-400 text-sm mb-4">Logistics and transport booking platform. Features seamless WhatsApp integration and mobile-first design.</p>
+                    <p class="text-slate-400 text-sm mb-4">Logistics and transport booking platform with seamless WhatsApp and support integration.</p>
                     <span class="text-xs bg-orange-500/20 text-orange-400 px-2 py-1 rounded">Logistics/Transport</span>
                     <a href="https://www.albarkashuttle.com/" target="_blank" class="text-xs text-slate-500 ml-2 hover:text-white">Visit Site →</a>
                 </div>
@@ -87,7 +107,7 @@
                         <img src="https://www.paycluster.com/wp-content/uploads/2023/12/paycluster_logo_1.svg" alt="Paycluster Logo" class="max-h-16">
                     </div>
                     <h4 class="text-xl font-bold mb-2 text-sky-400">Paycluster</h4>
-                    <p class="text-slate-400 text-sm mb-4">Fintech solution showcase. Developed with high-conversion landing pages and SEO-optimized content structures.</p>
+                    <p class="text-slate-400 text-sm mb-4">Fintech corporate site. High-conversion landing pages with optimized SEO structures.</p>
                     <span class="text-xs bg-emerald-500/20 text-emerald-400 px-2 py-1 rounded">Fintech</span>
                     <a href="https://www.paycluster.com/" target="_blank" class="text-xs text-slate-500 ml-2 hover:text-white">Visit Site →</a>
                 </div>
@@ -97,20 +117,53 @@
     </section>
 
     <section id="skills" class="py-20 px-6">
-        <div class="max-w-4xl mx-auto text-center">
-            <h3 class="text-3xl font-bold mb-10">Technical Mastery</h3>
-            <div class="flex flex-wrap justify-center gap-4">
-                <span class="glass px-6 py-3 rounded-full text-sky-400 border border-sky-500/30">WordPress (Advanced Troubleshooting)</span>
-                <span class="glass px-6 py-3 rounded-full">Digital & Social Media Marketing</span>
-                <span class="glass px-6 py-3 rounded-full">SEO & Content Optimization</span>
-                <span class="glass px-6 py-3 rounded-full">Customer Technical Support</span>
-                <span class="glass px-6 py-3 rounded-full">Next.js / TypeScript</span>
+        <div class="max-w-6xl mx-auto">
+            <h3 class="text-3xl font-bold mb-16 text-center">Skills & Industries</h3>
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-12">
+                
+                <div class="space-y-6">
+                    <h4 class="text-xl font-semibold text-sky-400">Marketing & Design</h4>
+                    <div class="flex flex-wrap gap-3">
+                        <span class="skill-badge px-4 py-2 rounded-full text-sm">Adobe Suite</span>
+                        <span class="skill-badge px-4 py-2 rounded-full text-sm">Canva / Figma</span>
+                        <span class="skill-badge px-4 py-2 rounded-full text-sm font-bold">Google Ads / GA4</span>
+                        <span class="skill-badge px-4 py-2 rounded-full text-sm">Meta Ads Manager</span>
+                        <span class="skill-badge px-4 py-2 rounded-full text-sm font-bold">WordPress Expert</span>
+                        <span class="skill-badge px-4 py-2 rounded-full text-sm">SEO (SEMrush)</span>
+                    </div>
+                </div>
+
+                <div class="space-y-6">
+                    <h4 class="text-xl font-semibold text-indigo-400">Tech & Code</h4>
+                    <div class="flex flex-wrap gap-3">
+                        <span class="skill-badge px-4 py-2 rounded-full text-sm font-bold">Git/GitHub</span>
+                        <span class="skill-badge px-4 py-2 rounded-full text-sm">HTML/CSS/JS</span>
+                        <span class="skill-badge px-4 py-2 rounded-full text-sm">Node.js / React</span>
+                        <span class="skill-badge px-4 py-2 rounded-full text-sm">SQL / Prisma</span>
+                        <span class="skill-badge px-4 py-2 rounded-full text-sm">Next.js 15</span>
+                    </div>
+                </div>
+
+                <div class="glass p-6 rounded-2xl border border-slate-800">
+                    <h4 class="text-xl font-semibold mb-4">Sector Experience</h4>
+                    <ul class="text-slate-400 text-sm space-y-2 list-disc list-inside">
+                        <li>Tech / SaaS & Fintech</li>
+                        <li>Healthcare / MedTech</li>
+                        <li>Charity / NGO</li>
+                        <li>E-commerce & Logistics</li>
+                        <li>Education / EdTech</li>
+                    </ul>
+                </div>
             </div>
         </div>
     </section>
 
     <footer class="py-10 text-center border-t border-slate-800">
-        <p class="text-slate-500">© 2026 Yuri Olorunfemi. Prepared for Scale Army.</p>
+        <p class="text-slate-500">© 2026 Yuri Olorunfemi. Build for Scale Army.</p>
+        <div class="mt-4 space-x-4">
+            <a href="https://www.linkedin.com/in/yuri-olorunfemi-35b684173/" target="_blank" class="text-slate-400 hover:text-white"><i class="fab fa-linkedin text-xl"></i></a>
+            <a href="https://github.com/YuriDeraven" target="_blank" class="text-slate-400 hover:text-white"><i class="fab fa-github text-xl"></i></a>
+        </div>
     </footer>
 
 </body>
