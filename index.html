@@ -3,12 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Yuri Olorunfemi | Portfolio</title>
-    
+    <title>Yuri Olorunfemi | Full-Stack Engineer & Digital Systems</title>
+
     <link rel="icon" type="image/png" href="images/favicon.png">
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
     <script>
         if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
             document.documentElement.classList.add('dark')
@@ -18,51 +21,106 @@
     </script>
 
     <style>
-        :root { --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
+        :root {
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            --bg: #f7f8fb;
+            --bg-panel: #ffffff;
+            --bg-sunken: #eef0f6;
+            --border: #e3e6ee;
+            --text-primary: #0e1320;
+            --text-muted: #5b6478;
+            --accent: #2563eb;
+            --accent-2: #0891b2;
+            --accent-3: #b45309;
+            --terminal-bg: #0b0f18;
+            --terminal-text: #cbd5e1;
+            --grid-line: rgba(15, 23, 42, 0.04);
+        }
+        .dark {
+            --bg: #05070d;
+            --bg-panel: #0c1120;
+            --bg-sunken: #090d18;
+            --border: #1c2333;
+            --text-primary: #e8ecf6;
+            --text-muted: #8a93ab;
+            --accent: #4f8cff;
+            --accent-2: #22d3ee;
+            --accent-3: #f5a623;
+            --terminal-bg: #05070d;
+            --terminal-text: #b9c3d6;
+            --grid-line: rgba(255, 255, 255, 0.035);
+        }
+
         html { scroll-behavior: smooth; }
-        
-        body { 
-            transition: background-color 0.3s ease, color 0.3s ease; 
+        body {
+            background-color: var(--bg);
+            color: var(--text-primary);
             font-family: 'Inter', sans-serif;
+            transition: background-color 0.35s ease, color 0.35s ease;
+            background-image:
+                linear-gradient(var(--grid-line) 1px, transparent 1px),
+                linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
+            background-size: 64px 64px;
+            background-position: center top;
         }
 
-        .dark body { background-color: #0f172a; color: #f1f5f9; }
-        body { background-color: #ffffff; color: #1e293b; }
+        .font-display { font-family: 'Space Grotesk', sans-serif; }
+        .font-mono { font-family: 'JetBrains Mono', monospace; }
 
-        .glass { 
-            background: rgba(255, 255, 255, 0.8); 
-            backdrop-filter: blur(10px); 
-            border: 1px solid rgba(0,0,0,0.05); 
-        }
-        .dark .glass { 
-            background: rgba(30, 41, 59, 0.7); 
-            border: 1px solid rgba(255,255,255,0.1); 
+        .glass {
+            background: color-mix(in srgb, var(--bg-panel) 82%, transparent);
+            backdrop-filter: blur(14px);
+            border-color: var(--border);
         }
 
-        .gradient-text { 
-            background: linear-gradient(90deg, #3b82f6, #6366f1); 
-            -webkit-background-clip: text; 
-            -webkit-text-fill-color: transparent; 
+        .panel { background-color: var(--bg-panel); border: 1px solid var(--border); }
+        .sunken { background-color: var(--bg-sunken); border: 1px solid var(--border); }
+
+        .text-muted { color: var(--text-muted); }
+        .text-accent { color: var(--accent); }
+        .text-accent-2 { color: var(--accent-2); }
+
+        .gradient-text {
+            background: linear-gradient(100deg, var(--accent), var(--accent-2));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
         }
 
         .hover-lift { transition: var(--transition); }
-        .hover-lift:hover { transform: translateY(-10px); }
-        
-        .dark .card-bg { background-color: #1e293b; border-color: #334155; }
-        .card-bg { background-color: #f8fafc; border-color: #e2e8f0; }
+        .hover-lift:hover { transform: translateY(-6px); border-color: color-mix(in srgb, var(--accent) 55%, var(--border)); }
+
+        .mod-tag {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.72rem;
+            letter-spacing: 0.14em;
+            color: var(--accent-2);
+            border: 1px solid var(--border);
+            background: var(--bg-sunken);
+            padding: 0.3rem 0.75rem;
+            border-radius: 999px;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .mod-tag::before { content: ''; width: 6px; height: 6px; border-radius: 50%; background: var(--accent-2); box-shadow: 0 0 6px var(--accent-2); }
 
         .skill-badge {
             padding: 0.5rem 1rem;
-            border-radius: 9999px;
-            font-size: 0.875rem;
+            border-radius: 8px;
+            font-size: 0.82rem;
             font-weight: 500;
+            font-family: 'JetBrains Mono', monospace;
+            border: 1px solid var(--border);
+            background: var(--bg-sunken);
+            color: var(--text-primary);
             transition: var(--transition);
         }
-        .dark .skill-badge { background: #334155; color: #38bdf8; border: 1px solid #475569; }
-        .skill-badge { background: #f1f5f9; color: #0284c7; border: 1px solid #e2e8f0; }
-        
+        .skill-badge:hover { border-color: var(--accent); color: var(--accent); transform: translateY(-2px); }
+        .skill-badge.starred { color: var(--accent-2); border-color: color-mix(in srgb, var(--accent-2) 40%, var(--border)); }
+
         .status-dot {
-            height: 10px; width: 10px;
+            height: 8px; width: 8px;
             background-color: #22c55e;
             border-radius: 50%;
             display: inline-block;
@@ -71,179 +129,468 @@
         }
         @keyframes pulse {
             0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.7); }
-            70% { transform: scale(1); box-shadow: 0 0 0 10px rgba(34, 197, 94, 0); }
+            70% { transform: scale(1); box-shadow: 0 0 0 8px rgba(34, 197, 94, 0); }
             100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(34, 197, 94, 0); }
         }
 
-        pre { font-family: 'Fira Code', monospace; font-size: 0.85rem; }
+        /* Terminal window */
+        .terminal-window { background: var(--terminal-bg); border: 1px solid var(--border); border-radius: 16px; overflow: hidden; box-shadow: 0 30px 60px -25px rgba(0,0,0,0.45); }
+        .terminal-bar { display: flex; align-items: center; gap: 8px; padding: 0.65rem 1rem; border-bottom: 1px solid rgba(255,255,255,0.06); background: rgba(255,255,255,0.02); }
+        .terminal-dots span { width: 10px; height: 10px; border-radius: 50%; display: inline-block; margin-right: 6px; }
+        .dot-red { background: #ef4444; } .dot-yellow { background: #f59e0b; } .dot-green { background: #22c55e; }
+        .terminal-title { font-family: 'JetBrains Mono', monospace; font-size: 0.72rem; color: #7c8aa5; margin-left: 4px; }
+        .terminal-body { padding: 1.5rem; font-family: 'JetBrains Mono', monospace; font-size: 0.85rem; line-height: 1.9; color: var(--terminal-text); }
+        .prompt { color: var(--accent-2); }
+
+        .blink-cursor { display: inline-block; width: 8px; background: var(--accent-2); animation: blink 1s steps(1) infinite; }
+        @keyframes blink { 50% { opacity: 0; } }
+
+        /* App-window project cards */
+        .app-card { border-radius: 20px; overflow: hidden; border: 1px solid var(--border); background: var(--bg-panel); }
+        .app-card-bar { display: flex; align-items: center; justify-content: space-between; padding: 0.6rem 1rem; background: var(--bg-sunken); border-bottom: 1px solid var(--border); }
+        .app-card-url { font-family: 'JetBrains Mono', monospace; font-size: 0.68rem; color: var(--text-muted); }
+
+        .btn-primary {
+            background: var(--accent); color: white; font-weight: 600; font-size: 0.82rem;
+            padding: 0.55rem 1.1rem; border-radius: 10px; display: inline-flex; align-items: center; gap: 0.4rem;
+            transition: var(--transition);
+        }
+        .btn-primary:hover { background: color-mix(in srgb, var(--accent) 85%, black); transform: translateY(-2px); }
+        .btn-ghost {
+            border: 1px solid var(--border); color: var(--text-primary); font-weight: 600; font-size: 0.82rem;
+            padding: 0.55rem 1.1rem; border-radius: 10px; display: inline-flex; align-items: center; gap: 0.4rem;
+            transition: var(--transition);
+        }
+        .btn-ghost:hover { border-color: var(--accent); color: var(--accent); transform: translateY(-2px); }
+
+        .reveal { opacity: 0; transform: translateY(24px); transition: opacity 0.7s ease, transform 0.7s ease; }
+        .reveal-visible { opacity: 1; transform: translateY(0); }
+
+        pre { font-family: 'JetBrains Mono', monospace; font-size: 0.82rem; }
+
+        ::selection { background: var(--accent); color: white; }
+
+        .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0; }
+
+        /* Profile image: smoother, faster perceived load */
+        .orbit-stage { position: relative; width: 176px; height: 176px; }
+        .profile-frame {
+            position: absolute; inset: 0; border-radius: 50%; overflow: hidden;
+            border: 4px solid var(--bg-panel); box-shadow: 0 20px 45px -18px rgba(0,0,0,0.5);
+            background: linear-gradient(135deg, var(--bg-sunken), var(--border));
+            background-size: 220% 220%;
+            animation: skeleton-shimmer 1.8s ease-in-out infinite;
+        }
+        .profile-img {
+            width: 100%; height: 100%; object-fit: cover; display: block;
+            opacity: 0; transform: scale(1.04);
+            transition: opacity 0.5s ease, transform 0.6s ease;
+        }
+        .profile-img.is-loaded { opacity: 1; transform: scale(1); }
+        .profile-frame:has(.is-loaded) { animation: none; background: none; }
+        @keyframes skeleton-shimmer {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+
+        /* Orbiting specialty icons */
+        .orbit { position: absolute; inset: 0; pointer-events: none; }
+        .orbit-a { animation: orbit-cw 16s linear infinite; }
+        .orbit-b { animation: orbit-ccw 22s linear infinite; }
+        .orbit-icon {
+            position: absolute; top: -16px; left: 50%;
+            width: 38px; height: 38px; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            background: var(--bg-panel); border: 1px solid var(--border);
+            box-shadow: 0 10px 22px -8px rgba(0,0,0,0.4);
+            color: var(--accent); font-size: 0.9rem;
+            transform: translateX(-50%);
+            animation: icon-ccw 16s linear infinite;
+        }
+        .orbit-b .orbit-icon { top: auto; bottom: -16px; animation: icon-cw 22s linear infinite; }
+        .orbit-icon-cyan { color: var(--accent-2); }
+        @keyframes orbit-cw { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+        @keyframes orbit-ccw { from { transform: rotate(0deg); } to { transform: rotate(-360deg); } }
+        @keyframes icon-ccw { from { transform: translateX(-50%) rotate(0deg); } to { transform: translateX(-50%) rotate(-360deg); } }
+        @keyframes icon-cw { from { transform: translateX(-50%) rotate(0deg); } to { transform: translateX(-50%) rotate(360deg); } }
+
+        /* Animated 3D background field */
+        .bg-3d { position: fixed; inset: 0; z-index: -1; overflow: hidden; pointer-events: none; perspective: 1400px; }
+        .parallax-shape { position: absolute; will-change: transform; }
+        .shape-3d { transform-style: preserve-3d; }
+
+        .cube { width: 64px; height: 64px; }
+        .cube-inner { position: relative; width: 100%; height: 100%; transform-style: preserve-3d; animation: cube-spin 24s linear infinite; }
+        .cube-face {
+            position: absolute; inset: 0;
+            border: 1px solid color-mix(in srgb, var(--accent) 45%, transparent);
+            background: color-mix(in srgb, var(--accent) 7%, transparent);
+        }
+        .cube-face.f-front  { transform: translateZ(32px); }
+        .cube-face.f-back   { transform: translateZ(-32px) rotateY(180deg); }
+        .cube-face.f-right  { transform: rotateY(90deg) translateZ(32px); }
+        .cube-face.f-left   { transform: rotateY(-90deg) translateZ(32px); }
+        .cube-face.f-top    { transform: rotateX(90deg) translateZ(32px); }
+        .cube-face.f-bottom { transform: rotateX(-90deg) translateZ(32px); }
+        @keyframes cube-spin { from { transform: rotateX(0deg) rotateY(0deg); } to { transform: rotateX(360deg) rotateY(360deg); } }
+
+        .orb-3d {
+            border-radius: 50%; filter: blur(1px);
+            background: radial-gradient(circle at 32% 28%, color-mix(in srgb, var(--accent-2) 55%, transparent), transparent 70%),
+                        radial-gradient(circle at 65% 70%, color-mix(in srgb, var(--accent) 45%, transparent), transparent 75%);
+            animation: orb-spin 30s linear infinite;
+            box-shadow: inset 0 0 30px color-mix(in srgb, var(--accent) 20%, transparent);
+        }
+        @keyframes orb-spin { from { transform: rotate(0deg) scale(1); } to { transform: rotate(360deg) scale(1.05); } }
+
+        .ring-3d {
+            border-radius: 50%;
+            border: 2px solid color-mix(in srgb, var(--accent-3) 55%, transparent);
+            transform-style: preserve-3d;
+            animation: ring-tumble 26s linear infinite;
+        }
+        @keyframes ring-tumble { from { transform: rotateX(70deg) rotateZ(0deg); } to { transform: rotateX(70deg) rotateZ(360deg); } }
+
+        @media (prefers-reduced-motion: reduce) {
+            .status-dot, .blink-cursor { animation: none; }
+            .reveal { transition: none; opacity: 1; transform: none; }
+            .orbit, .orbit-icon, .cube-inner, .orb-3d, .ring-3d { animation: none; }
+            .profile-frame { animation: none; }
+        }
     </style>
 </head>
 <body class="antialiased">
 
-    <nav class="fixed w-full z-50 glass py-4 px-6 flex justify-between items-center">
-        <h1 class="text-xl font-bold gradient-text">Yuri Olorunfemi</h1>
-        
-        <div class="flex items-center space-x-8">
-            <div class="hidden md:flex space-x-6 text-sm font-semibold">
-                <a href="#about" class="hover:text-blue-500 transition">About</a>
-                <a href="#wordpress" class="hover:text-blue-500 transition">WordPress</a>
-                <a href="#fullstack" class="hover:text-blue-500 transition">Full-Stack</a>
-                <a href="#php-modules" class="hover:text-blue-500 transition">PHP Scripts</a>
-                <a href="#skills" class="hover:text-blue-500 transition">Skills</a>
+    <!-- Animated 3D background field -->
+    <div class="bg-3d" aria-hidden="true">
+        <div class="parallax-shape" data-depth="0.05" style="top:12%; left:6%;">
+            <div class="cube shape-3d"><div class="cube-inner">
+                <div class="cube-face f-front"></div><div class="cube-face f-back"></div>
+                <div class="cube-face f-right"></div><div class="cube-face f-left"></div>
+                <div class="cube-face f-top"></div><div class="cube-face f-bottom"></div>
+            </div></div>
+        </div>
+        <div class="parallax-shape" data-depth="0.03" style="top:20%; right:8%;">
+            <div class="orb-3d" style="width:120px; height:120px; opacity:0.35;"></div>
+        </div>
+        <div class="parallax-shape" data-depth="0.07" style="top:55%; left:3%;">
+            <div class="ring-3d" style="width:150px; height:150px; opacity:0.3;"></div>
+        </div>
+        <div class="parallax-shape" data-depth="0.04" style="bottom:12%; right:10%;">
+            <div class="cube shape-3d" style="width:46px; height:46px;"><div class="cube-inner">
+                <div class="cube-face f-front"></div><div class="cube-face f-back"></div>
+                <div class="cube-face f-right"></div><div class="cube-face f-left"></div>
+                <div class="cube-face f-top"></div><div class="cube-face f-bottom"></div>
+            </div></div>
+        </div>
+        <div class="parallax-shape" data-depth="0.02" style="bottom:22%; left:22%;">
+            <div class="orb-3d" style="width:70px; height:70px; opacity:0.3;"></div>
+        </div>
+    </div>
+
+    <!-- Live status strip -->
+    <div class="fixed top-0 w-full z-[60] border-b glass" style="border-color: var(--border);">
+        <div class="max-w-7xl mx-auto px-6 h-9 flex items-center justify-between font-mono text-[11px] tracking-wide text-muted">
+            <div class="flex items-center gap-4">
+                <span class="hidden sm:inline">SYSTEM_LOCATION: ABUJA, NG</span>
+                <span class="sm:hidden">ABUJA, NG</span>
             </div>
-            
-            <button id="theme-toggle" class="p-2 rounded-xl bg-slate-100 dark:bg-slate-800 hover:ring-2 ring-blue-400 transition">
+            <div class="flex items-center gap-4">
+                <span id="strip-clock">--:--:--</span>
+                <span class="flex items-center gap-1.5"><span class="status-dot"></span><span id="strip-status">CHECKING…</span></span>
+            </div>
+        </div>
+    </div>
+
+    <nav class="fixed w-full z-50 glass py-4 px-6 flex justify-between items-center border-b top-9" style="border-color: var(--border);">
+        <a href="#about" class="text-lg font-display font-bold tracking-tight">Yuri<span class="gradient-text">.dev</span></a>
+
+        <div class="flex items-center space-x-8">
+            <div class="hidden md:flex space-x-7 text-sm font-semibold">
+                <a href="#about" class="hover:text-accent transition">About</a>
+                <a href="#wordpress" class="hover:text-accent transition">WordPress</a>
+                <a href="#fullstack" class="hover:text-accent transition">Full-Stack</a>
+                <a href="#php-modules" class="hover:text-accent transition">PHP Scripts</a>
+                <a href="#skills" class="hover:text-accent transition">Skills</a>
+            </div>
+
+            <button id="theme-toggle" class="p-2 rounded-xl sunken hover:ring-2 ring-blue-400 transition" style="border-color: var(--border);">
                 <i id="theme-icon" class="fas fa-moon text-slate-700 dark:text-yellow-400"></i>
             </button>
-            
-            <a href="https://www.linkedin.com/in/yuri-olorunfemi-35b684173/" target="_blank" class="bg-blue-600 px-6 py-2 rounded-full text-white text-sm font-bold hover:bg-blue-700 transition shadow-lg">Contact</a>
+
+            <a href="https://www.linkedin.com/in/yuri-olorunfemi-35b684173/" target="_blank" rel="noopener" class="btn-primary hidden sm:inline-flex">Contact</a>
         </div>
     </nav>
 
-    <section id="about" class="pt-40 pb-20 px-6 max-w-7xl mx-auto">
-        <div class="flex flex-col lg:flex-row items-center gap-16">
-            <div class="relative w-64 h-64 md:w-80 md:h-80">
-                <div class="absolute inset-0 bg-blue-500 rounded-full blur-3xl opacity-20"></div>
-                <img src="images/profile.png" alt="Yuri Olorunfemi" class="relative rounded-full border-4 border-white dark:border-slate-800 shadow-2xl w-full h-full object-cover">
-            </div>
+    <!-- HERO -->
+    <section id="about" class="pt-44 pb-24 px-6 max-w-7xl mx-auto">
+        <div class="grid lg:grid-cols-[1.1fr_0.9fr] gap-14 items-center">
+            <div class="space-y-7 reveal">
+                <div class="mod-tag">BOOT_SEQUENCE // PORTFOLIO_V2</div>
 
-            <div class="space-y-6 text-center lg:text-left">
-                <div class="inline-flex items-center space-x-2 bg-slate-900 text-white dark:bg-slate-800 dark:text-slate-200 px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider">
-                    <span class="status-dot"></span>
-                    <span>Available for new projects</span>
-                </div>
-                
-                <h2 class="text-5xl md:text-7xl font-black tracking-tight leading-tight">Engineering <span class="gradient-text">Digital Growth.</span></h2>
-                <p class="text-lg md:text-xl text-slate-500 dark:text-slate-400 max-w-2xl">
-                    I am a **Full-Stack Developer and Digital Strategist** dedicated to building robust web applications and high-conversion WordPress ecosystems. I bridge the gap between complex backend logic and seamless frontend interfaces.
+                <h2 class="text-5xl md:text-6xl lg:text-7xl font-display font-bold tracking-tight leading-[1.05]">
+                    Engineering<br><span class="gradient-text">digital systems</span><br>that scale.
+                </h2>
+
+                <p class="text-lg text-muted max-w-xl leading-relaxed">
+                    I'm a full-stack developer and digital strategist building production-grade web applications and high-conversion WordPress ecosystems — bridging backend logic with interfaces people actually enjoy using.
                 </p>
-                
-                <div class="flex flex-wrap justify-center lg:justify-start gap-4">
-                    <div class="p-4 rounded-2xl border card-bg shadow-sm px-8">
-                        <span class="block text-3xl font-black">5+ Years</span>
-                        <span class="text-xs text-slate-400 uppercase font-bold">Experience</span>
+
+                <div class="flex flex-wrap gap-4 pt-2">
+                    <a href="https://github.com/YuriDeraven" target="_blank" rel="noopener" class="btn-primary">View systems <i class="fas fa-arrow-right text-xs"></i></a>
+                    <a href="https://www.linkedin.com/in/yuri-olorunfemi-35b684173/" target="_blank" rel="noopener" class="btn-ghost">Get in touch</a>
+                </div>
+            </div>
+
+            <div class="reveal">
+                <div class="orbit-stage mx-auto mb-8">
+                    <div class="absolute inset-0 bg-blue-500 rounded-full blur-3xl opacity-20"></div>
+
+                    <div class="profile-frame">
+                        <img
+                            src="images/profile.png"
+                            alt="Yuri Olorunfemi"
+                            class="profile-img"
+                            width="176" height="176"
+                            loading="eager"
+                            fetchpriority="high"
+                            decoding="async"
+                            onload="this.classList.add('is-loaded')">
                     </div>
-                    <div class="p-4 rounded-2xl border card-bg shadow-sm px-8">
-                        <span class="block text-3xl font-black">20+</span>
-                        <span class="text-xs text-slate-400 uppercase font-bold">Projects Done</span>
+
+                    <div class="orbit orbit-a" aria-hidden="true">
+                        <div class="orbit-icon" title="Digital Marketing"><i class="fas fa-bullhorn"></i></div>
+                    </div>
+                    <div class="orbit orbit-b" aria-hidden="true">
+                        <div class="orbit-icon orbit-icon-cyan" title="Full-Stack Developer"><i class="fas fa-code"></i></div>
+                    </div>
+
+                    <span class="sr-only">Digital Marketing and Full-Stack Development specialties, shown as orbiting icons</span>
+                </div>
+                <p class="text-center text-xs font-mono text-muted -mt-4 mb-6 tracking-wide">
+                    <i class="fas fa-bullhorn text-accent"></i> Digital Marketing &nbsp;·&nbsp; <i class="fas fa-code text-accent-2"></i> Full-Stack Development
+                </p>
+
+                <div class="terminal-window">
+                    <div class="terminal-bar">
+                        <div class="terminal-dots"><span class="dot-red"></span><span class="dot-yellow"></span><span class="dot-green"></span></div>
+                        <span class="terminal-title">status.sh — yuri_olorunfemi</span>
+                    </div>
+                    <div class="terminal-body">
+                        <p><span class="prompt">$</span> whoami</p>
+                        <p class="mb-3 opacity-90">full-stack engineer &amp; digital strategist</p>
+                        <p><span class="prompt">$</span> uptime --experience</p>
+                        <p class="mb-3 opacity-90">5+ years in production</p>
+                        <p><span class="prompt">$</span> ls ./projects | wc -l</p>
+                        <p class="mb-3 opacity-90">20+ shipped systems</p>
+                        <p><span class="prompt">$</span> status --availability</p>
+                        <p class="mb-3"><span id="hero-status" class="text-green-400">● open for new projects</span></p>
+                        <p><span class="prompt">$</span> date --lagos</p>
+                        <p><span id="hero-clock">--:--:--</span><span class="blink-cursor">&nbsp;</span></p>
                     </div>
                 </div>
             </div>
         </div>
     </section>
 
-    <section id="wordpress" class="py-24 px-6 bg-slate-50 dark:bg-slate-900/30">
+    <!-- WORDPRESS -->
+    <section id="wordpress" class="py-24 px-6" style="background-color: var(--bg-sunken); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border);">
         <div class="max-w-7xl mx-auto">
-            <h3 class="text-center text-3xl font-black mb-16 uppercase tracking-widest text-blue-500">WordPress Ecosystems</h3>
+            <div class="mb-14 reveal">
+                <span class="mod-tag mb-4 inline-flex">MOD_01 // CONTENT_SYSTEMS</span>
+                <h3 class="text-3xl md:text-4xl font-display font-bold mt-4">WordPress Ecosystems</h3>
+                <p class="text-muted mt-2 max-w-xl">Performance-tuned WordPress builds across news, logistics, healthcare, NGO, and FinTech.</p>
+            </div>
             <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-                <div class="glass p-5 rounded-3xl hover-lift shadow-sm">
-                    <img src="images/DeFi Planet.png" class="w-full h-48 object-cover rounded-2xl mb-4 border border-slate-200 dark:border-slate-700">
-                    <h4 class="text-xl font-bold mb-2">DeFi Planet</h4>
-                    <p class="text-sm text-slate-500 dark:text-slate-400">Web3 news platform optimized for massive traffic and performance.</p>
+                <a href="https://defi-planet.com" target="_blank" rel="noopener" class="app-card hover-lift reveal block">
+                    <div class="app-card-bar">
+                        <div class="terminal-dots"><span class="dot-red"></span><span class="dot-yellow"></span><span class="dot-green"></span></div>
+                        <span class="app-card-url">defi-planet.com</span>
+                    </div>
+                    <img src="images/DeFi Planet.png" class="w-full h-44 object-cover">
+                    <div class="p-5">
+                        <h4 class="text-lg font-display font-bold mb-1">DeFi Planet</h4>
+                        <p class="text-sm text-muted">Web3 news platform optimized for massive traffic and performance.</p>
+                    </div>
+                </a>
+                <div class="app-card hover-lift reveal">
+                    <div class="app-card-bar">
+                        <div class="terminal-dots"><span class="dot-red"></span><span class="dot-yellow"></span><span class="dot-green"></span></div>
+                        <span class="app-card-url">albarkashuttle.ng</span>
+                    </div>
+                    <img src="images/Albarka Shuttle Services.png" class="w-full h-44 object-cover">
+                    <div class="p-5">
+                        <h4 class="text-lg font-display font-bold mb-1">Albarka Shuttle</h4>
+                        <p class="text-sm text-muted">Premium logistics platform with integrated real-time booking systems.</p>
+                    </div>
                 </div>
-                <div class="glass p-5 rounded-3xl hover-lift shadow-sm">
-                    <img src="images/Albarka Shuttle Services.png" class="w-full h-48 object-cover rounded-2xl mb-4 border border-slate-200 dark:border-slate-700">
-                    <h4 class="text-xl font-bold mb-2">Albarka Shuttle</h4>
-                    <p class="text-sm text-slate-500 dark:text-slate-400">Premium logistics platform with integrated real-time booking systems.</p>
+                <div class="app-card hover-lift reveal">
+                    <div class="app-card-bar">
+                        <div class="terminal-dots"><span class="dot-red"></span><span class="dot-yellow"></span><span class="dot-green"></span></div>
+                        <span class="app-card-url">barakacare.ng</span>
+                    </div>
+                    <img src="images/Bakara Care Services.png" class="w-full h-44 object-cover">
+                    <div class="p-5">
+                        <h4 class="text-lg font-display font-bold mb-1">Baraka Care Services</h4>
+                        <p class="text-sm text-muted">Healthcare portal for elderly care, focused on trust and accessibility.</p>
+                    </div>
                 </div>
-                <div class="glass p-5 rounded-3xl hover-lift shadow-sm">
-                    <img src="images/Bakara Care Services.png" class="w-full h-48 object-cover rounded-2xl mb-4 border border-slate-200 dark:border-slate-700">
-                    <h4 class="text-xl font-bold mb-2">Baraka Care Services</h4>
-                    <p class="text-sm text-slate-500 dark:text-slate-400">Healthcare portal for elderly care, focused on trust and accessibility.</p>
+                <div class="app-card hover-lift reveal">
+                    <div class="app-card-bar">
+                        <div class="terminal-dots"><span class="dot-red"></span><span class="dot-yellow"></span><span class="dot-green"></span></div>
+                        <span class="app-card-url">barekcharity.org</span>
+                    </div>
+                    <img src="images/Barek Charity.png" class="w-full h-44 object-cover">
+                    <div class="p-5">
+                        <h4 class="text-lg font-display font-bold mb-1">Barek Charity</h4>
+                        <p class="text-sm text-muted">Impact-driven NGO platform with donation management features.</p>
+                    </div>
                 </div>
-                <div class="glass p-5 rounded-3xl hover-lift shadow-sm">
-                    <img src="images/Barek Charity.png" class="w-full h-48 object-cover rounded-2xl mb-4 border border-slate-200 dark:border-slate-700">
-                    <h4 class="text-xl font-bold mb-2">Barek Charity</h4>
-                    <p class="text-sm text-slate-500 dark:text-slate-400">Impact-driven NGO platform with donation management features.</p>
-                </div>
-                <div class="glass p-5 rounded-3xl hover-lift shadow-sm">
-                    <img src="images/Paycluster.png" class="w-full h-48 object-cover rounded-2xl mb-4 border border-slate-200 dark:border-slate-700">
-                    <h4 class="text-xl font-bold mb-2">Paycluster</h4>
-                    <p class="text-sm text-slate-500 dark:text-slate-400">FinTech landing pages designed for lead conversion and SEO.</p>
+                <div class="app-card hover-lift reveal">
+                    <div class="app-card-bar">
+                        <div class="terminal-dots"><span class="dot-red"></span><span class="dot-yellow"></span><span class="dot-green"></span></div>
+                        <span class="app-card-url">paycluster.com</span>
+                    </div>
+                    <img src="images/Paycluster.png" class="w-full h-44 object-cover">
+                    <div class="p-5">
+                        <h4 class="text-lg font-display font-bold mb-1">Paycluster</h4>
+                        <p class="text-sm text-muted">FinTech landing pages designed for lead conversion and SEO.</p>
+                    </div>
                 </div>
             </div>
         </div>
     </section>
 
+    <!-- FULL STACK -->
     <section id="fullstack" class="py-24 px-6">
         <div class="max-w-7xl mx-auto">
-            <h3 class="text-center text-3xl font-black mb-16 uppercase tracking-widest text-indigo-500">Full-Stack Solutions</h3>
+            <div class="mb-14 reveal">
+                <span class="mod-tag mb-4 inline-flex">MOD_02 // APPLICATION_SYSTEMS</span>
+                <h3 class="text-3xl md:text-4xl font-display font-bold mt-4">Full-Stack Solutions</h3>
+                <p class="text-muted mt-2 max-w-xl">Modular, production-structured applications — from hospitality management to HR dashboards.</p>
+            </div>
             <div class="grid md:grid-cols-2 gap-8">
-                <div class="p-8 rounded-3xl border card-bg hover:border-indigo-500 transition shadow-sm group">
-                    <div class="flex justify-between items-start mb-6">
-                        <h4 class="text-2xl font-bold group-hover:text-indigo-500 transition">MORAV RMS</h4>
-                        <div class="flex gap-2">
-                            <span class="text-[10px] font-bold px-2 py-1 bg-indigo-500/10 text-indigo-500 rounded">Next.js 15</span>
-                            <span class="text-[10px] font-bold px-2 py-1 bg-indigo-500/10 text-indigo-500 rounded">Prisma</span>
-                            <span class="text-[10px] font-bold px-2 py-1 bg-indigo-500/10 text-indigo-500 rounded">SQLite</span>
+
+                <div class="app-card hover-lift reveal">
+                    <div class="app-card-bar">
+                        <div class="terminal-dots"><span class="dot-red"></span><span class="dot-yellow"></span><span class="dot-green"></span></div>
+                        <span class="app-card-url">morav-rms.vercel.app</span>
+                    </div>
+                    <div class="p-8">
+                        <div class="flex justify-between items-start mb-4">
+                            <h4 class="text-2xl font-display font-bold">MORAV RMS</h4>
+                        </div>
+                        <div class="flex gap-2 flex-wrap mb-5">
+                            <span class="text-[10px] font-mono font-bold px-2 py-1 rounded" style="background: color-mix(in srgb, var(--accent) 12%, transparent); color: var(--accent);">Next.js 15</span>
+                            <span class="text-[10px] font-mono font-bold px-2 py-1 rounded" style="background: color-mix(in srgb, var(--accent) 12%, transparent); color: var(--accent);">Prisma</span>
+                            <span class="text-[10px] font-mono font-bold px-2 py-1 rounded" style="background: color-mix(in srgb, var(--accent) 12%, transparent); color: var(--accent);">SQLite</span>
+                        </div>
+                        <p class="text-muted mb-6">A comprehensive Hospitality Management System — modules for POS, Inventory, and Accounting.</p>
+                        <div class="flex flex-wrap gap-3">
+                            <a href="https://morav-miebksnhy-deraven.vercel.app/" target="_blank" rel="noopener" class="btn-primary">Live demo <i class="fas fa-up-right-from-square text-xs"></i></a>
+                            <a href="https://github.com/YuriDeraven" target="_blank" rel="noopener" class="btn-ghost"><i class="fab fa-github"></i> Repository</a>
                         </div>
                     </div>
-                    <p class="text-slate-500 dark:text-slate-400 mb-6">A comprehensive Hospitality Management System featuring modules for POS, Inventory, and Accounting.</p>
-                    <a href="https://github.com/YuriDeraven" target="_blank" class="font-bold text-indigo-500 hover:underline">View Repository →</a>
                 </div>
-                <div class="p-8 rounded-3xl border card-bg hover:border-indigo-500 transition shadow-sm group">
-                    <div class="flex justify-between items-start mb-6">
-                        <h4 class="text-2xl font-bold group-hover:text-indigo-500 transition">JobWay HR</h4>
-                        <div class="flex gap-2">
-                            <span class="text-[10px] font-bold px-2 py-1 bg-indigo-500/10 text-indigo-500 rounded">Next.js</span>
-                            <span class="text-[10px] font-bold px-2 py-1 bg-indigo-500/10 text-indigo-500 rounded">shadcn/ui</span>
+
+                <div class="app-card hover-lift reveal">
+                    <div class="app-card-bar">
+                        <div class="terminal-dots"><span class="dot-red"></span><span class="dot-yellow"></span><span class="dot-green"></span></div>
+                        <span class="app-card-url">jobway-dashboard.vercel.app</span>
+                    </div>
+                    <div class="p-8">
+                        <div class="flex justify-between items-start mb-4">
+                            <h4 class="text-2xl font-display font-bold">JobWay HR</h4>
+                        </div>
+                        <div class="flex gap-2 flex-wrap mb-5">
+                            <span class="text-[10px] font-mono font-bold px-2 py-1 rounded" style="background: color-mix(in srgb, var(--accent) 12%, transparent); color: var(--accent);">Next.js</span>
+                            <span class="text-[10px] font-mono font-bold px-2 py-1 rounded" style="background: color-mix(in srgb, var(--accent) 12%, transparent); color: var(--accent);">shadcn/ui</span>
+                        </div>
+                        <p class="text-muted mb-6">Modern HR-focused dashboard application with advanced UI components for talent management.</p>
+                        <div class="flex flex-wrap gap-3">
+                            <a href="https://jobway-dashboard-fsqu773sg-raven15.vercel.app/" target="_blank" rel="noopener" class="btn-primary">Live demo <i class="fas fa-up-right-from-square text-xs"></i></a>
+                            <a href="https://github.com/YuriDeraven" target="_blank" rel="noopener" class="btn-ghost"><i class="fab fa-github"></i> Repository</a>
                         </div>
                     </div>
-                    <p class="text-slate-500 dark:text-slate-400 mb-6">Modern HR-focused dashboard application with advanced UI components for talent management.</p>
-                    <a href="https://github.com/YuriDeraven" target="_blank" class="font-bold text-indigo-500 hover:underline">View Repository →</a>
                 </div>
-                <div class="p-8 rounded-3xl border card-bg hover:border-indigo-500 transition shadow-sm group">
-                    <div class="flex justify-between items-start mb-6">
-                        <h4 class="text-2xl font-bold group-hover:text-indigo-500 transition">Ajo Digital Ledger</h4>
-                        <div class="flex gap-2">
-                            <span class="text-[10px] font-bold px-2 py-1 bg-indigo-500/10 text-indigo-500 rounded">TypeScript</span>
-                            <span class="text-[10px] font-bold px-2 py-1 bg-indigo-500/10 text-indigo-500 rounded">Next.js</span>
+
+                <div class="app-card hover-lift reveal">
+                    <div class="app-card-bar">
+                        <div class="terminal-dots"><span class="dot-red"></span><span class="dot-yellow"></span><span class="dot-green"></span></div>
+                        <span class="app-card-url">ajo-ledger</span>
+                    </div>
+                    <div class="p-8">
+                        <div class="flex justify-between items-start mb-4">
+                            <h4 class="text-2xl font-display font-bold">Ajo Digital Ledger</h4>
+                        </div>
+                        <div class="flex gap-2 flex-wrap mb-5">
+                            <span class="text-[10px] font-mono font-bold px-2 py-1 rounded" style="background: color-mix(in srgb, var(--accent) 12%, transparent); color: var(--accent);">TypeScript</span>
+                            <span class="text-[10px] font-mono font-bold px-2 py-1 rounded" style="background: color-mix(in srgb, var(--accent) 12%, transparent); color: var(--accent);">Next.js</span>
+                        </div>
+                        <p class="text-muted mb-6">A financial ledger application designed to track group contributions and personal savings.</p>
+                        <div class="flex flex-wrap gap-3">
+                            <a href="https://github.com/YuriDeraven" target="_blank" rel="noopener" class="btn-ghost"><i class="fab fa-github"></i> Repository</a>
                         </div>
                     </div>
-                    <p class="text-slate-500 dark:text-slate-400 mb-6">A financial ledger application designed to track group contributions and personal savings.</p>
-                    <a href="https://github.com/YuriDeraven" target="_blank" class="font-bold text-indigo-500 hover:underline">View Repository →</a>
                 </div>
-                <div class="p-8 rounded-3xl border card-bg hover:border-indigo-500 transition shadow-sm group">
-                    <div class="flex justify-between items-start mb-6">
-                        <h4 class="text-2xl font-bold group-hover:text-indigo-500 transition">Mini-POS</h4>
-                        <div class="flex gap-2">
-                            <span class="text-[10px] font-bold px-2 py-1 bg-indigo-500/10 text-indigo-500 rounded">Next.js API</span>
-                            <span class="text-[10px] font-bold px-2 py-1 bg-indigo-500/10 text-indigo-500 rounded">SQLite</span>
+
+                <div class="app-card hover-lift reveal">
+                    <div class="app-card-bar">
+                        <div class="terminal-dots"><span class="dot-red"></span><span class="dot-yellow"></span><span class="dot-green"></span></div>
+                        <span class="app-card-url">mini-pos</span>
+                    </div>
+                    <div class="p-8">
+                        <div class="flex justify-between items-start mb-4">
+                            <h4 class="text-2xl font-display font-bold">Mini-POS</h4>
+                        </div>
+                        <div class="flex gap-2 flex-wrap mb-5">
+                            <span class="text-[10px] font-mono font-bold px-2 py-1 rounded" style="background: color-mix(in srgb, var(--accent) 12%, transparent); color: var(--accent);">Next.js API</span>
+                            <span class="text-[10px] font-mono font-bold px-2 py-1 rounded" style="background: color-mix(in srgb, var(--accent) 12%, transparent); color: var(--accent);">SQLite</span>
+                        </div>
+                        <p class="text-muted mb-6">Lightweight Point-of-Sale system optimized for small business retail and inventory workflows.</p>
+                        <div class="flex flex-wrap gap-3">
+                            <a href="https://github.com/YuriDeraven" target="_blank" rel="noopener" class="btn-ghost"><i class="fab fa-github"></i> Repository</a>
                         </div>
                     </div>
-                    <p class="text-slate-500 dark:text-slate-400 mb-6">Lightweight Point-of-Sale system optimized for small business retail and inventory workflows.</p>
-                    <a href="https://github.com/YuriDeraven" target="_blank" class="font-bold text-indigo-500 hover:underline">View Repository →</a>
                 </div>
+
             </div>
         </div>
     </section>
 
-    <section id="php-modules" class="py-24 px-6 bg-slate-100 dark:bg-slate-900/50">
-        <div class="max-w-4xl mx-auto text-center">
-            <h3 class="text-3xl font-black mb-4 uppercase tracking-widest text-blue-500">Custom PHP Logic</h3>
-            <p class="text-slate-500 dark:text-slate-400 mb-12">Showcasing clean, efficient PHP scripts for WordPress and custom web environments.</p>
-            
-            <div class="glass p-8 rounded-3xl border card-bg shadow-lg inline-block text-left w-full">
+    <!-- PHP MODULES -->
+    <section id="php-modules" class="py-24 px-6" style="background-color: var(--bg-sunken); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border);">
+        <div class="max-w-4xl mx-auto text-center reveal">
+            <span class="mod-tag mb-4 inline-flex">MOD_03 // SERVER_LOGIC</span>
+            <h3 class="text-3xl md:text-4xl font-display font-bold mt-4 mb-3">Custom PHP Logic</h3>
+            <p class="text-muted mb-12">Clean, efficient PHP scripts for WordPress and custom web environments.</p>
+
+            <div class="panel p-8 rounded-3xl shadow-lg text-left w-full">
                 <div class="flex flex-col md:flex-row justify-between items-center gap-6">
                     <div>
-                        <h4 class="text-xl font-bold mb-2">Smart Greeting & Availability System</h4>
-                        <p class="text-sm text-slate-500 dark:text-slate-400 mb-4">A server-side script that handles time-zone logic to greet visitors and show live project availability.</p>
-                        
-                        <div id="php-live-demo" class="p-4 rounded-xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 inline-block shadow-inner">
-                            <h5 id="greeting-msg" class="text-lg font-bold text-slate-800 dark:text-white">Loading...</h5>
+                        <h4 class="text-xl font-display font-bold mb-2">Smart Greeting &amp; Availability System</h4>
+                        <p class="text-sm text-muted mb-4">A server-side script that handles time-zone logic to greet visitors and show live project availability — the same logic driving the status strip at the top of this page.</p>
+
+                        <div id="php-live-demo" class="p-4 rounded-xl sunken inline-block shadow-inner">
+                            <h5 id="greeting-msg" class="text-lg font-bold">Loading...</h5>
                             <div class="flex items-center gap-2 mt-2">
                                 <span id="status-light" class="h-2.5 w-2.5 rounded-full"></span>
-                                <span id="status-text" class="text-xs font-bold uppercase tracking-wider text-slate-400">Checking Hours...</span>
+                                <span id="status-text" class="text-xs font-mono font-bold uppercase tracking-wider text-muted">Checking Hours...</span>
                             </div>
                         </div>
                     </div>
-                    
-                    <button onclick="toggleCode()" class="bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-3 rounded-2xl text-sm font-bold transition flex items-center gap-2">
+
+                    <button onclick="toggleCode()" class="btn-primary whitespace-nowrap">
                         <i class="fas fa-code"></i> View PHP Source
                     </button>
                 </div>
 
-                <div id="php-code-block" class="hidden mt-8 p-6 rounded-2xl bg-slate-900 text-slate-300 overflow-x-auto text-xs leading-relaxed border border-slate-700">
+                <div id="php-code-block" class="hidden mt-8 terminal-window">
+                    <div class="terminal-bar">
+                        <div class="terminal-dots"><span class="dot-red"></span><span class="dot-yellow"></span><span class="dot-green"></span></div>
+                        <span class="terminal-title">smart-greeting.php</span>
+                    </div>
+                    <div class="terminal-body overflow-x-auto">
 <pre><code><span class="text-blue-400">&lt;?php</span>
 <span class="text-slate-500">/**
  * Smart Greeting System
@@ -271,17 +618,22 @@
     ];
 }
 <span class="text-blue-400">?&gt;</span></code></pre>
+                    </div>
                 </div>
             </div>
         </div>
     </section>
 
-    <section id="skills" class="py-24 px-6 bg-slate-50 dark:bg-slate-900/30">
+    <!-- SKILLS -->
+    <section id="skills" class="py-24 px-6">
         <div class="max-w-7xl mx-auto">
-            <h3 class="text-center text-3xl font-black mb-16 uppercase tracking-widest">Skills & Expertise</h3>
+            <div class="mb-14 reveal">
+                <span class="mod-tag mb-4 inline-flex">MOD_04 // CAPABILITY_REGISTRY</span>
+                <h3 class="text-3xl md:text-4xl font-display font-bold mt-4">Skills &amp; Expertise</h3>
+            </div>
             <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-12">
-                <div class="space-y-6">
-                    <h4 class="text-xl font-bold text-blue-500">Design & Marketing</h4>
+                <div class="space-y-6 reveal">
+                    <h4 class="text-xl font-display font-bold text-accent">Design &amp; Marketing</h4>
                     <div class="flex flex-wrap gap-2">
                         <span class="skill-badge">Adobe Illustrator</span>
                         <span class="skill-badge">Adobe Photoshop</span>
@@ -291,38 +643,38 @@
                         <span class="skill-badge">GA4</span>
                         <span class="skill-badge">Meta Ads Manager</span>
                         <span class="skill-badge">SEMrush / Ahrefs</span>
-                        <span class="skill-badge font-black underline">WordPress Expert</span>
+                        <span class="skill-badge starred">WordPress Expert</span>
                     </div>
                 </div>
 
-                <div class="space-y-6">
-                    <h4 class="text-xl font-bold text-indigo-500">Engineering</h4>
+                <div class="space-y-6 reveal">
+                    <h4 class="text-xl font-display font-bold text-accent-2">Engineering</h4>
                     <div class="flex flex-wrap gap-2">
                         <span class="skill-badge">Git / GitHub</span>
                         <span class="skill-badge">HTML / CSS</span>
-                        <span class="skill-badge font-black">PHP / WordPress API</span>
+                        <span class="skill-badge starred">PHP / WordPress API</span>
                         <span class="skill-badge">JavaScript</span>
                         <span class="skill-badge">Node.js</span>
-                        <span class="skill-badge font-black">React / Next.js 15</span>
+                        <span class="skill-badge starred">React / Next.js 15</span>
                         <span class="skill-badge">SQL</span>
                     </div>
                 </div>
 
-                <div class="p-8 rounded-3xl border card-bg shadow-sm">
-                    <h4 class="text-xl font-bold mb-6">Experience Sectors</h4>
-                    <ul class="space-y-3 text-slate-500 dark:text-slate-400">
-                        <li class="flex items-center gap-2"><i class="fas fa-check text-green-500"></i> Tech / SaaS & FinTech</li>
+                <div class="panel p-8 rounded-3xl shadow-sm reveal">
+                    <h4 class="text-xl font-display font-bold mb-6">Experience Sectors</h4>
+                    <ul class="space-y-3 text-muted">
+                        <li class="flex items-center gap-2"><i class="fas fa-check text-green-500"></i> Tech / SaaS &amp; FinTech</li>
                         <li class="flex items-center gap-2"><i class="fas fa-check text-green-500"></i> Healthcare / MedTech</li>
                         <li class="flex items-center gap-2"><i class="fas fa-check text-green-500"></i> Education / EdTech</li>
                         <li class="flex items-center gap-2"><i class="fas fa-check text-green-500"></i> E-commerce / Retail / B2C</li>
-                        <li class="flex items-center gap-2"><i class="fas fa-check text-green-500"></i> NGO & Marketing / Advertising</li>
+                        <li class="flex items-center gap-2"><i class="fas fa-check text-green-500"></i> NGO &amp; Marketing / Advertising</li>
                     </ul>
                 </div>
             </div>
         </div>
     </section>
 
-    <footer class="py-12 text-center text-slate-400 text-sm border-t dark:border-slate-800">
+    <footer class="py-12 text-center text-muted text-sm border-t font-mono" style="border-color: var(--border);">
         <p>&copy; 2026 Yuri Olorunfemi. Build for Scale.</p>
     </footer>
 
@@ -345,11 +697,14 @@
             themeIcon.classList.replace('fa-moon', 'fa-sun');
         }
 
+        function pad(n) { return n.toString().padStart(2, '0'); }
+
         function runSimulatedPHP() {
             const now = new Date();
             const hour = now.getHours();
-            const day = now.getDay(); 
-            
+            const day = now.getDay();
+            const timeStr = `${pad(now.getHours())}:${pad(now.getMinutes())}:${pad(now.getSeconds())}`;
+
             let greeting = "";
             if (hour < 12) greeting = "Good Morning";
             else if (hour < 17) greeting = "Good Afternoon";
@@ -359,9 +714,25 @@
             const isBusinessHours = (hour >= 9 && hour < 17);
             const isOpen = (!isWeekend && isBusinessHours);
 
+            // PHP demo card
             document.getElementById('greeting-msg').innerText = `${greeting}, Visitor!`;
             document.getElementById('status-text').innerText = isOpen ? "Open for new projects" : "Away - Back soon!";
             document.getElementById('status-light').className = `h-2.5 w-2.5 rounded-full ${isOpen ? 'bg-green-500 shadow-[0_0_8px_#22c55e]' : 'bg-slate-400'}`;
+
+            // Hero terminal
+            const heroClock = document.getElementById('hero-clock');
+            if (heroClock) heroClock.innerText = timeStr;
+            const heroStatus = document.getElementById('hero-status');
+            if (heroStatus) {
+                heroStatus.innerText = isOpen ? '● open for new projects' : '● away — back soon';
+                heroStatus.className = isOpen ? 'text-green-400' : 'text-amber-400';
+            }
+
+            // Top strip
+            const stripClock = document.getElementById('strip-clock');
+            if (stripClock) stripClock.innerText = timeStr;
+            const stripStatus = document.getElementById('strip-status');
+            if (stripStatus) stripStatus.innerText = isOpen ? 'AVAILABLE FOR NEW PROJECTS' : 'AWAY — BACK SOON';
         }
 
         function toggleCode() {
@@ -370,6 +741,47 @@
         }
 
         runSimulatedPHP();
+        setInterval(runSimulatedPHP, 1000);
+
+        // Floating / parallax motion for the 3D background shapes
+        (function () {
+            const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+            const shapes = document.querySelectorAll('.parallax-shape');
+            if (reduceMotion || !shapes.length) return;
+
+            let mouseX = 0, mouseY = 0, curX = 0, curY = 0;
+            window.addEventListener('mousemove', (e) => {
+                mouseX = (e.clientX / window.innerWidth - 0.5) * 2;
+                mouseY = (e.clientY / window.innerHeight - 0.5) * 2;
+            });
+
+            function tick(t) {
+                curX += (mouseX - curX) * 0.04;
+                curY += (mouseY - curY) * 0.04;
+                shapes.forEach((el, i) => {
+                    const depth = parseFloat(el.dataset.depth || '0.03');
+                    const floatX = Math.cos(t / 2600 + i * 1.7) * 14;
+                    const floatY = Math.sin(t / 2000 + i * 1.3) * 16;
+                    const px = curX * depth * 320 + floatX;
+                    const py = curY * depth * 320 + floatY;
+                    el.style.transform = `translate3d(${px}px, ${py}px, 0)`;
+                });
+                requestAnimationFrame(tick);
+            }
+            requestAnimationFrame(tick);
+        })();
+
+        // Scroll reveal
+        const revealEls = document.querySelectorAll('.reveal');
+        const io = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('reveal-visible');
+                    io.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.15 });
+        revealEls.forEach(el => io.observe(el));
     </script>
 </body>
 </html>
