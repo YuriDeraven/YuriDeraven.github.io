@@ -271,6 +271,17 @@
             box-shadow: 0 0 35px color-mix(in srgb, var(--accent-3) 30%, transparent);
         }
 
+        /* Systems Lab tabs */
+        .sys-tabs { display: flex; gap: 4px; overflow-x: auto; padding: 0.75rem 0.75rem 0; background: var(--bg-sunken); border-bottom: 1px solid var(--border); }
+        .sys-tab { font-family: 'JetBrains Mono', monospace; font-size: 0.72rem; padding: 0.6rem 1.1rem; border-radius: 8px 8px 0 0; background: transparent; color: var(--text-muted); white-space: nowrap; border: 1px solid transparent; transition: var(--transition); cursor: pointer; }
+        .sys-tab:hover { color: var(--text-primary); }
+        .sys-tab.active { background: var(--bg-panel); color: var(--accent); border-color: var(--border); border-bottom-color: var(--bg-panel); }
+
+        .token-block { width: 18px; height: 18px; border-radius: 4px; border: 1px solid var(--border); transition: background 0.3s ease, box-shadow 0.3s ease; }
+        .token-block.filled { background: var(--accent-2); box-shadow: 0 0 10px color-mix(in srgb, var(--accent-2) 60%, transparent); border-color: var(--accent-2); }
+        .log-allow { color: #22c55e; }
+        .log-deny { color: #ef4444; }
+
         @media (prefers-reduced-motion: reduce) {
             .status-dot, .blink-cursor { animation: none; }
             .reveal { transition: none; opacity: 1; transform: none; }
@@ -330,7 +341,7 @@
                 <a href="#about" class="hover:text-accent transition">About</a>
                 <a href="#wordpress" class="hover:text-accent transition">WordPress</a>
                 <a href="#fullstack" class="hover:text-accent transition">Full-Stack</a>
-                <a href="#php-modules" class="hover:text-accent transition">PHP Scripts</a>
+                <a href="#systems-lab" class="hover:text-accent transition">Systems Lab</a>
                 <a href="#skills" class="hover:text-accent transition">Skills</a>
             </div>
 
@@ -579,38 +590,45 @@
     </section>
 
     <!-- PHP MODULES -->
-    <section id="php-modules" class="py-24 px-6" style="background-color: var(--bg-sunken); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border);">
-        <div class="max-w-4xl mx-auto text-center reveal">
-            <span class="mod-tag mb-4 inline-flex">MOD_03 // SERVER_LOGIC</span>
-            <h3 class="text-3xl md:text-4xl font-display font-bold mt-4 mb-3">Custom PHP Logic</h3>
-            <p class="text-muted mb-12">Clean, efficient PHP scripts for WordPress and custom web environments.</p>
+    <section id="systems-lab" class="py-24 px-6" style="background-color: var(--bg-sunken); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border);">
+        <div class="max-w-6xl mx-auto">
+            <div class="text-center reveal mb-12">
+                <span class="mod-tag mb-4 inline-flex">MOD_03 // LIVE_SYSTEMS_LAB</span>
+                <h3 class="text-3xl md:text-4xl font-display font-bold mt-4 mb-3">Interactive Systems Lab</h3>
+                <p class="text-muted max-w-2xl mx-auto">Five working logic systems spanning the stack — PHP, JavaScript, Python, SQL, and Node.js. Use each demo live, then view the source.</p>
+            </div>
 
-            <div class="panel p-8 rounded-3xl shadow-lg text-left w-full">
-                <div class="flex flex-col md:flex-row justify-between items-center gap-6">
-                    <div>
-                        <h4 class="text-xl font-display font-bold mb-2">Smart Greeting &amp; Availability System</h4>
-                        <p class="text-sm text-muted mb-4">A server-side script that handles time-zone logic to greet visitors and show live project availability — the same logic driving the status strip at the top of this page.</p>
-
-                        <div id="php-live-demo" class="p-4 rounded-xl sunken inline-block shadow-inner">
-                            <h5 id="greeting-msg" class="text-lg font-bold">Loading...</h5>
-                            <div class="flex items-center gap-2 mt-2">
-                                <span id="status-light" class="h-2.5 w-2.5 rounded-full"></span>
-                                <span id="status-text" class="text-xs font-mono font-bold uppercase tracking-wider text-muted">Checking Hours...</span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <button onclick="toggleCode()" class="btn-primary whitespace-nowrap">
-                        <i class="fas fa-code"></i> View PHP Source
-                    </button>
+            <div class="panel rounded-3xl shadow-lg overflow-hidden reveal">
+                <div class="sys-tabs" role="tablist">
+                    <button class="sys-tab active" data-target="php" onclick="switchSystem('php')">smart-greeting.php</button>
+                    <button class="sys-tab" data-target="jsquote" onclick="switchSystem('jsquote')">quote-engine.js</button>
+                    <button class="sys-tab" data-target="pyvalidate" onclick="switchSystem('pyvalidate')">validator.py</button>
+                    <button class="sys-tab" data-target="sqlquery" onclick="switchSystem('sqlquery')">queries.sql</button>
+                    <button class="sys-tab" data-target="noderate" onclick="switchSystem('noderate')">rate-limiter.js</button>
                 </div>
 
-                <div id="php-code-block" class="hidden mt-8 terminal-window">
-                    <div class="terminal-bar">
-                        <div class="terminal-dots"><span class="dot-red"></span><span class="dot-yellow"></span><span class="dot-green"></span></div>
-                        <span class="terminal-title">smart-greeting.php</span>
-                    </div>
-                    <div class="terminal-body overflow-x-auto">
+                <!-- PANEL 1: PHP -->
+                <div class="sys-panel p-8" data-panel="php">
+                    <div class="grid md:grid-cols-2 gap-8 items-start">
+                        <div>
+                            <h4 class="text-xl font-display font-bold mb-2">Smart Greeting &amp; Availability System</h4>
+                            <p class="text-sm text-muted mb-4">Server-side time-zone logic that greets visitors and reports live project availability — the same logic driving the status strip up top.</p>
+                            <div id="php-live-demo" class="p-4 rounded-xl sunken inline-block shadow-inner">
+                                <h5 id="greeting-msg" class="text-lg font-bold">Loading...</h5>
+                                <div class="flex items-center gap-2 mt-2">
+                                    <span id="status-light" class="h-2.5 w-2.5 rounded-full"></span>
+                                    <span id="status-text" class="text-xs font-mono font-bold uppercase tracking-wider text-muted">Checking Hours...</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div>
+                            <button onclick="toggleCode('php')" class="btn-ghost mb-4"><i class="fas fa-code"></i> View Source</button>
+                            <div id="php-code-block" class="hidden terminal-window">
+                                <div class="terminal-bar">
+                                    <div class="terminal-dots"><span class="dot-red"></span><span class="dot-yellow"></span><span class="dot-green"></span></div>
+                                    <span class="terminal-title">smart-greeting.php</span>
+                                </div>
+                                <div class="terminal-body overflow-x-auto">
 <pre><code><span class="text-blue-400">&lt;?php</span>
 <span class="text-slate-500">/**
  * Smart Greeting System
@@ -638,6 +656,220 @@
     ];
 }
 <span class="text-blue-400">?&gt;</span></code></pre>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- PANEL 2: JS Quote Engine -->
+                <div class="sys-panel hidden p-8" data-panel="jsquote">
+                    <div class="grid md:grid-cols-2 gap-8 items-start">
+                        <div>
+                            <h4 class="text-xl font-display font-bold mb-2">Smart Project Quote Engine</h4>
+                            <p class="text-sm text-muted mb-4">Pick a project type, drag the complexity slider, toggle rush delivery — the estimate recalculates live, in Naira.</p>
+
+                            <div class="space-y-4">
+                                <div>
+                                    <label class="text-xs font-mono uppercase tracking-wider text-muted">Project type</label>
+                                    <select id="quote-type" class="w-full mt-1 p-2.5 rounded-lg sunken font-mono text-sm" onchange="updateQuote()">
+                                        <option value="landing">Landing Page</option>
+                                        <option value="wordpress">WordPress Site</option>
+                                        <option value="webapp" selected>Full-Stack Web App</option>
+                                        <option value="ecommerce">E-commerce Store</option>
+                                        <option value="api">API / Backend Service</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label class="text-xs font-mono uppercase tracking-wider text-muted">Complexity: <span id="quote-complexity-val">3</span>/5</label>
+                                    <input id="quote-complexity" type="range" min="1" max="5" value="3" class="w-full accent-blue-500" oninput="updateQuote()">
+                                </div>
+                                <label class="flex items-center gap-2 text-sm font-mono">
+                                    <input id="quote-rush" type="checkbox" onchange="updateQuote()"> Rush delivery (+25% cost, −30% timeline)
+                                </label>
+                            </div>
+
+                            <div class="mt-6 p-5 rounded-xl sunken">
+                                <p class="text-xs font-mono uppercase tracking-wider text-muted mb-1">Estimated investment</p>
+                                <p id="quote-price" class="text-2xl font-display font-bold text-accent">₦0 – ₦0</p>
+                                <p id="quote-days" class="text-sm text-muted mt-1">-- business days</p>
+                            </div>
+                        </div>
+                        <div>
+                            <button onclick="toggleCode('jsquote')" class="btn-ghost mb-4"><i class="fas fa-code"></i> View Source</button>
+                            <div id="jsquote-code-block" class="hidden terminal-window">
+                                <div class="terminal-bar">
+                                    <div class="terminal-dots"><span class="dot-red"></span><span class="dot-yellow"></span><span class="dot-green"></span></div>
+                                    <span class="terminal-title">quote-engine.js</span>
+                                </div>
+                                <div class="terminal-body overflow-x-auto">
+<pre><code><span class="text-slate-500">// Pricing rates per project type (NGN)</span>
+<span class="text-indigo-400">const</span> rates = {
+  landing:   { min: <span class="text-orange-400">150000</span>, max: <span class="text-orange-400">250000</span>, days: [<span class="text-orange-400">5</span>, <span class="text-orange-400">7</span>] },
+  wordpress: { min: <span class="text-orange-400">300000</span>, max: <span class="text-orange-400">500000</span>, days: [<span class="text-orange-400">10</span>, <span class="text-orange-400">14</span>] },
+  webapp:    { min: <span class="text-orange-400">600000</span>, max: <span class="text-orange-400">1000000</span>, days: [<span class="text-orange-400">20</span>, <span class="text-orange-400">30</span>] },
+  ecommerce: { min: <span class="text-orange-400">500000</span>, max: <span class="text-orange-400">800000</span>, days: [<span class="text-orange-400">15</span>, <span class="text-orange-400">21</span>] },
+  api:       { min: <span class="text-orange-400">400000</span>, max: <span class="text-orange-400">650000</span>, days: [<span class="text-orange-400">12</span>, <span class="text-orange-400">18</span>] },
+};
+
+<span class="text-indigo-400">function</span> <span class="text-yellow-400">calculateQuote</span>(type, complexity, rush) {
+  <span class="text-indigo-400">const</span> base = rates[type];
+  <span class="text-indigo-400">const</span> factor = <span class="text-orange-400">0.8</span> + complexity * <span class="text-orange-400">0.1</span>;
+  <span class="text-indigo-400">const</span> rushFactor = rush ? <span class="text-orange-400">1.25</span> : <span class="text-orange-400">1</span>;
+  <span class="text-indigo-400">const</span> rushDays = rush ? <span class="text-orange-400">0.7</span> : <span class="text-orange-400">1</span>;
+
+  <span class="text-indigo-400">return</span> {
+    min: Math.round(base.min * factor * rushFactor),
+    max: Math.round(base.max * factor * rushFactor),
+    days: base.days.map(d => Math.round(d * rushDays)),
+  };
+}</code></pre>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- PANEL 3: Python Validator -->
+                <div class="sys-panel hidden p-8" data-panel="pyvalidate">
+                    <div class="grid md:grid-cols-2 gap-8 items-start">
+                        <div>
+                            <h4 class="text-xl font-display font-bold mb-2">Contact Form Validation Engine</h4>
+                            <p class="text-sm text-muted mb-4">Regex patterns written in Python, mirrored here in JavaScript so you can test them live in the browser.</p>
+
+                            <div class="space-y-4">
+                                <div>
+                                    <label class="text-xs font-mono uppercase tracking-wider text-muted">Email address</label>
+                                    <input id="val-email" type="text" placeholder="you@example.com" class="w-full mt-1 p-2.5 rounded-lg sunken font-mono text-sm" oninput="validateInputs()">
+                                    <p id="val-email-msg" class="text-xs font-mono mt-1 text-muted">Start typing…</p>
+                                </div>
+                                <div>
+                                    <label class="text-xs font-mono uppercase tracking-wider text-muted">Nigerian phone number</label>
+                                    <input id="val-phone" type="text" placeholder="0803 123 4567" class="w-full mt-1 p-2.5 rounded-lg sunken font-mono text-sm" oninput="validateInputs()">
+                                    <p id="val-phone-msg" class="text-xs font-mono mt-1 text-muted">Start typing…</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div>
+                            <button onclick="toggleCode('pyvalidate')" class="btn-ghost mb-4"><i class="fas fa-code"></i> View Source</button>
+                            <div id="pyvalidate-code-block" class="hidden terminal-window">
+                                <div class="terminal-bar">
+                                    <div class="terminal-dots"><span class="dot-red"></span><span class="dot-yellow"></span><span class="dot-green"></span></div>
+                                    <span class="terminal-title">validator.py</span>
+                                </div>
+                                <div class="terminal-body overflow-x-auto">
+<pre><code><span class="text-indigo-400">import</span> re
+
+EMAIL_RE = re.<span class="text-pink-400">compile</span>(<span class="text-green-400">r"^[\w.+-]+@[\w-]+\.[a-zA-Z]{2,}$"</span>)
+PHONE_RE = re.<span class="text-pink-400">compile</span>(<span class="text-green-400">r"^(\+234|0)[789][01]\d{8}$"</span>)  <span class="text-slate-500"># NG mobile format</span>
+
+<span class="text-indigo-400">def</span> <span class="text-yellow-400">validate_email</span>(value: str) -> bool:
+    <span class="text-indigo-400">return</span> bool(EMAIL_RE.match(value))
+
+<span class="text-indigo-400">def</span> <span class="text-yellow-400">validate_phone</span>(value: str) -> bool:
+    <span class="text-indigo-400">return</span> bool(PHONE_RE.match(value.replace(<span class="text-green-400">" "</span>, <span class="text-green-400">""</span>)))</code></pre>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- PANEL 4: SQL Query Playground -->
+                <div class="sys-panel hidden p-8" data-panel="sqlquery">
+                    <div class="grid md:grid-cols-2 gap-8 items-start">
+                        <div>
+                            <h4 class="text-xl font-display font-bold mb-2">Client Database Query Playground</h4>
+                            <p class="text-sm text-muted mb-4">Pick a preset query against a mock <span class="font-mono">projects</span> table — filtering, sorting, and aggregation, computed live.</p>
+
+                            <select id="sql-preset" class="w-full p-2.5 rounded-lg sunken font-mono text-xs" onchange="runQuery()">
+                                <option value="active">SELECT * FROM projects WHERE status = 'active';</option>
+                                <option value="fullstack">SELECT client, amount FROM projects WHERE type='Full-Stack' ORDER BY amount DESC;</option>
+                                <option value="groupby">SELECT status, COUNT(*), SUM(amount) FROM projects GROUP BY status;</option>
+                                <option value="upcoming">SELECT * FROM projects ORDER BY deadline ASC LIMIT 3;</option>
+                            </select>
+                            <button onclick="runQuery()" class="btn-primary mt-3"><i class="fas fa-play text-xs"></i> Run Query</button>
+                            <div id="sql-result" class="mt-4 overflow-x-auto text-xs font-mono"></div>
+                        </div>
+                        <div>
+                            <button onclick="toggleCode('sqlquery')" class="btn-ghost mb-4"><i class="fas fa-code"></i> View Source</button>
+                            <div id="sqlquery-code-block" class="hidden terminal-window">
+                                <div class="terminal-bar">
+                                    <div class="terminal-dots"><span class="dot-red"></span><span class="dot-yellow"></span><span class="dot-green"></span></div>
+                                    <span class="terminal-title">queries.sql</span>
+                                </div>
+                                <div class="terminal-body overflow-x-auto">
+<pre><code><span class="text-slate-500">-- projects(id, client, type, status, amount, deadline)</span>
+
+<span class="text-indigo-400">SELECT</span> * <span class="text-indigo-400">FROM</span> projects
+<span class="text-indigo-400">WHERE</span> status = <span class="text-green-400">'active'</span>;
+
+<span class="text-indigo-400">SELECT</span> client, amount <span class="text-indigo-400">FROM</span> projects
+<span class="text-indigo-400">WHERE</span> type = <span class="text-green-400">'Full-Stack'</span>
+<span class="text-indigo-400">ORDER BY</span> amount <span class="text-indigo-400">DESC</span>;
+
+<span class="text-indigo-400">SELECT</span> status, <span class="text-pink-400">COUNT</span>(*), <span class="text-pink-400">SUM</span>(amount)
+<span class="text-indigo-400">FROM</span> projects
+<span class="text-indigo-400">GROUP BY</span> status;
+
+<span class="text-indigo-400">SELECT</span> * <span class="text-indigo-400">FROM</span> projects
+<span class="text-indigo-400">ORDER BY</span> deadline <span class="text-indigo-400">ASC</span>
+<span class="text-indigo-400">LIMIT</span> <span class="text-orange-400">3</span>;</code></pre>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- PANEL 5: Node.js Rate Limiter -->
+                <div class="sys-panel hidden p-8" data-panel="noderate">
+                    <div class="grid md:grid-cols-2 gap-8 items-start">
+                        <div>
+                            <h4 class="text-xl font-display font-bold mb-2">API Rate Limiter (Token Bucket)</h4>
+                            <p class="text-sm text-muted mb-4">A 5-token bucket refilling 1 token every 2 seconds — the same pattern used to protect production APIs from abuse. Fire requests and watch it throttle.</p>
+
+                            <div id="rate-gauge" class="flex items-center gap-2 mb-4"></div>
+                            <button onclick="fireRequest()" class="btn-primary"><i class="fas fa-bolt text-xs"></i> Send Request</button>
+                            <div id="rate-log" class="mt-4 space-y-1 text-xs font-mono max-h-36 overflow-y-auto"></div>
+                        </div>
+                        <div>
+                            <button onclick="toggleCode('noderate')" class="btn-ghost mb-4"><i class="fas fa-code"></i> View Source</button>
+                            <div id="noderate-code-block" class="hidden terminal-window">
+                                <div class="terminal-bar">
+                                    <div class="terminal-dots"><span class="dot-red"></span><span class="dot-yellow"></span><span class="dot-green"></span></div>
+                                    <span class="terminal-title">rate-limiter.js</span>
+                                </div>
+                                <div class="terminal-body overflow-x-auto">
+<pre><code><span class="text-indigo-400">class</span> <span class="text-yellow-400">TokenBucket</span> {
+  <span class="text-yellow-400">constructor</span>(capacity, refillMs) {
+    this.capacity = capacity;
+    this.tokens = capacity;
+    this.refillMs = refillMs;
+    this.last = Date.now();
+  }
+  <span class="text-yellow-400">refill</span>() {
+    <span class="text-indigo-400">const</span> elapsed = Date.now() - this.last;
+    <span class="text-indigo-400">const</span> add = Math.floor(elapsed / this.refillMs);
+    <span class="text-indigo-400">if</span> (add > <span class="text-orange-400">0</span>) {
+      this.tokens = Math.min(this.capacity, this.tokens + add);
+      this.last = Date.now();
+    }
+  }
+  <span class="text-yellow-400">tryRequest</span>() {
+    this.refill();
+    <span class="text-indigo-400">if</span> (this.tokens > <span class="text-orange-400">0</span>) { this.tokens--; <span class="text-indigo-400">return</span> <span class="text-indigo-400">true</span>; }
+    <span class="text-indigo-400">return</span> <span class="text-indigo-400">false</span>;
+  }
+}
+
+<span class="text-slate-500">// Express middleware</span>
+<span class="text-indigo-400">const</span> bucket = <span class="text-indigo-400">new</span> TokenBucket(<span class="text-orange-400">5</span>, <span class="text-orange-400">2000</span>);
+app.<span class="text-pink-400">use</span>((req, res, next) => {
+  <span class="text-indigo-400">if</span> (bucket.tryRequest()) <span class="text-indigo-400">return</span> next();
+  res.<span class="text-pink-400">status</span>(<span class="text-orange-400">429</span>).<span class="text-pink-400">send</span>(<span class="text-green-400">'Too Many Requests'</span>);
+});</code></pre>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -755,13 +987,180 @@
             if (stripStatus) stripStatus.innerText = isOpen ? 'AVAILABLE FOR NEW PROJECTS' : 'AWAY — BACK SOON';
         }
 
-        function toggleCode() {
-            const block = document.getElementById('php-code-block');
-            block.classList.toggle('hidden');
+        function toggleCode(id) {
+            const block = document.getElementById(id + '-code-block');
+            if (block) block.classList.toggle('hidden');
         }
+
+        function switchSystem(name) {
+            document.querySelectorAll('.sys-panel').forEach(p => {
+                p.classList.toggle('hidden', p.dataset.panel !== name);
+            });
+            document.querySelectorAll('.sys-tab').forEach(t => {
+                t.classList.toggle('active', t.dataset.target === name);
+            });
+        }
+
+        // --- quote-engine.js -------------------------------------------------
+        const quoteRates = {
+            landing:   { min: 150000, max: 250000, days: [5, 7] },
+            wordpress: { min: 300000, max: 500000, days: [10, 14] },
+            webapp:    { min: 600000, max: 1000000, days: [20, 30] },
+            ecommerce: { min: 500000, max: 800000, days: [15, 21] },
+            api:       { min: 400000, max: 650000, days: [12, 18] },
+        };
+
+        function calculateQuote(type, complexity, rush) {
+            const base = quoteRates[type];
+            const factor = 0.8 + complexity * 0.1;
+            const rushFactor = rush ? 1.25 : 1;
+            const rushDays = rush ? 0.7 : 1;
+            return {
+                min: Math.round(base.min * factor * rushFactor),
+                max: Math.round(base.max * factor * rushFactor),
+                days: base.days.map(d => Math.max(1, Math.round(d * rushDays))),
+            };
+        }
+
+        function formatNaira(n) { return '₦' + n.toLocaleString('en-NG'); }
+
+        function updateQuote() {
+            const type = document.getElementById('quote-type').value;
+            const complexity = parseInt(document.getElementById('quote-complexity').value, 10);
+            const rush = document.getElementById('quote-rush').checked;
+            document.getElementById('quote-complexity-val').innerText = complexity;
+
+            const result = calculateQuote(type, complexity, rush);
+            document.getElementById('quote-price').innerText = `${formatNaira(result.min)} – ${formatNaira(result.max)}`;
+            document.getElementById('quote-days').innerText = `${result.days[0]}–${result.days[1]} business days`;
+        }
+
+        // --- validator.py (mirrored) -----------------------------------------
+        const EMAIL_RE = /^[\w.+-]+@[\w-]+\.[a-zA-Z]{2,}$/;
+        const PHONE_RE = /^(\+234|0)[789][01]\d{8}$/;
+
+        function validateInputs() {
+            const emailEl = document.getElementById('val-email');
+            const phoneEl = document.getElementById('val-phone');
+            const emailMsg = document.getElementById('val-email-msg');
+            const phoneMsg = document.getElementById('val-phone-msg');
+            if (!emailEl || !phoneEl) return;
+
+            const emailVal = emailEl.value.trim();
+            if (!emailVal) { emailMsg.textContent = 'Start typing…'; emailMsg.className = 'text-xs font-mono mt-1 text-muted'; }
+            else if (EMAIL_RE.test(emailVal)) { emailMsg.textContent = '✓ Valid email format'; emailMsg.className = 'text-xs font-mono mt-1 log-allow'; }
+            else { emailMsg.textContent = '✕ Invalid email format'; emailMsg.className = 'text-xs font-mono mt-1 log-deny'; }
+
+            const phoneVal = phoneEl.value.replace(/\s+/g, '');
+            if (!phoneVal) { phoneMsg.textContent = 'Start typing…'; phoneMsg.className = 'text-xs font-mono mt-1 text-muted'; }
+            else if (PHONE_RE.test(phoneVal)) { phoneMsg.textContent = '✓ Valid NG mobile number'; phoneMsg.className = 'text-xs font-mono mt-1 log-allow'; }
+            else { phoneMsg.textContent = '✕ Invalid NG mobile number'; phoneMsg.className = 'text-xs font-mono mt-1 log-deny'; }
+        }
+
+        // --- queries.sql (mock, computed live) --------------------------------
+        const projectsDB = [
+            { id: 1, client: 'DeFi Planet', type: 'WordPress', status: 'active', amount: 250000, deadline: '2026-08-10' },
+            { id: 2, client: 'Albarka Shuttle', type: 'WordPress', status: 'completed', amount: 400000, deadline: '2026-05-01' },
+            { id: 3, client: 'MORAV Hotels', type: 'Full-Stack', status: 'active', amount: 950000, deadline: '2026-09-15' },
+            { id: 4, client: 'JobWay Inc', type: 'Full-Stack', status: 'active', amount: 700000, deadline: '2026-08-28' },
+            { id: 5, client: 'Barek Charity', type: 'WordPress', status: 'completed', amount: 300000, deadline: '2026-04-20' },
+            { id: 6, client: 'Paycluster', type: 'WordPress', status: 'on-hold', amount: 200000, deadline: '2026-10-05' },
+        ];
+
+        const sqlQueries = {
+            active: () => projectsDB.filter(p => p.status === 'active'),
+            fullstack: () => projectsDB.filter(p => p.type === 'Full-Stack')
+                                        .sort((a, b) => b.amount - a.amount)
+                                        .map(p => ({ client: p.client, amount: p.amount })),
+            groupby: () => {
+                const groups = {};
+                projectsDB.forEach(p => {
+                    if (!groups[p.status]) groups[p.status] = { status: p.status, count: 0, revenue: 0 };
+                    groups[p.status].count += 1;
+                    groups[p.status].revenue += p.amount;
+                });
+                return Object.values(groups);
+            },
+            upcoming: () => [...projectsDB].sort((a, b) => new Date(a.deadline) - new Date(b.deadline)).slice(0, 3),
+        };
+
+        function renderSqlTable(rows) {
+            const container = document.getElementById('sql-result');
+            if (!container) return;
+            if (!rows.length) { container.innerHTML = '<p class="text-muted">No rows returned.</p>'; return; }
+            const cols = Object.keys(rows[0]);
+            let html = '<table class="w-full border-collapse"><thead><tr>';
+            cols.forEach(c => html += `<th class="text-left p-2 border-b" style="border-color:var(--border); color:var(--accent-2);">${c}</th>`);
+            html += '</tr></thead><tbody>';
+            rows.forEach(r => {
+                html += '<tr>';
+                cols.forEach(c => {
+                    let val = r[c];
+                    if (c === 'amount' || c === 'revenue') val = formatNaira(val);
+                    html += `<td class="p-2 border-b" style="border-color:var(--border);">${val}</td>`;
+                });
+                html += '</tr>';
+            });
+            html += '</tbody></table>';
+            container.innerHTML = html;
+        }
+
+        function runQuery() {
+            const el = document.getElementById('sql-preset');
+            if (!el) return;
+            renderSqlTable(sqlQueries[el.value]());
+        }
+
+        // --- rate-limiter.js (token bucket) ------------------------------------
+        const bucket = { capacity: 5, tokens: 5, refillMs: 2000, last: Date.now() };
+
+        function refillBucket() {
+            const elapsed = Date.now() - bucket.last;
+            const add = Math.floor(elapsed / bucket.refillMs);
+            if (add > 0) {
+                bucket.tokens = Math.min(bucket.capacity, bucket.tokens + add);
+                bucket.last = Date.now();
+            }
+        }
+
+        function updateGauge() {
+            const gauge = document.getElementById('rate-gauge');
+            if (!gauge) return;
+            gauge.innerHTML = '';
+            for (let i = 0; i < bucket.capacity; i++) {
+                const block = document.createElement('div');
+                block.className = 'token-block' + (i < bucket.tokens ? ' filled' : '');
+                gauge.appendChild(block);
+            }
+        }
+
+        function fireRequest() {
+            refillBucket();
+            const log = document.getElementById('rate-log');
+            if (!log) return;
+            const time = new Date().toLocaleTimeString();
+            const entry = document.createElement('div');
+            if (bucket.tokens > 0) {
+                bucket.tokens--;
+                entry.className = 'log-allow';
+                entry.textContent = `[${time}] 200 OK — request allowed (${bucket.tokens} tokens left)`;
+            } else {
+                entry.className = 'log-deny';
+                entry.textContent = `[${time}] 429 Too Many Requests — rate limited`;
+            }
+            log.prepend(entry);
+            while (log.children.length > 6) log.removeChild(log.lastChild);
+            updateGauge();
+        }
+
+        setInterval(() => { refillBucket(); updateGauge(); }, 500);
 
         runSimulatedPHP();
         setInterval(runSimulatedPHP, 1000);
+        updateQuote();
+        validateInputs();
+        runQuery();
+        updateGauge();
 
         // Floating / parallax motion for the 3D background shapes
         (function () {
