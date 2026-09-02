@@ -10,7 +10,8 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&family=Galada&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
 
     <script>
         if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
@@ -282,11 +283,75 @@
         .log-allow { color: #22c55e; }
         .log-deny { color: #ef4444; }
 
+        /* Concept Lab — Fizz (soda) */
+        .soda-stage {
+            position: relative; height: 560px; border-radius: 28px; overflow: hidden;
+            border: 1px solid var(--border); font-family: 'Inter', sans-serif;
+            --soda-inner: #0b8a78; --soda-mid: #044e3b; --soda-outer: #011411;
+            background: radial-gradient(circle at center, var(--soda-inner) 0%, var(--soda-mid) 50%, var(--soda-outer) 100%);
+        }
+        .soda-nav { position: absolute; top: 0; left: 0; right: 0; z-index: 30; display: flex; justify-content: space-between; align-items: center; padding: 1.25rem 1.5rem; }
+        .soda-logo { font-family: 'Space Grotesk', sans-serif; font-weight: 700; color: #fff; display: flex; align-items: center; gap: 0.4rem; font-size: 0.95rem; }
+        .soda-pills { display: flex; gap: 0.4rem; background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.2); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); padding: 0.3rem; border-radius: 999px; }
+        .soda-pill { font-family: 'JetBrains Mono', monospace; font-size: 0.65rem; color: rgba(255,255,255,0.7); padding: 0.45rem 0.9rem; border-radius: 999px; }
+        .soda-pill.active { background: #fbcfe8; color: #011d17; }
+
+        .soda-bubbles { position: absolute; inset: 0; overflow: hidden; pointer-events: none; z-index: 1; }
+        .soda-bubble { position: absolute; bottom: -30px; border-radius: 50%; background: rgba(255,255,255,0.55); pointer-events: none; }
+        @keyframes soda-float-up {
+            0% { transform: translateY(0) translateX(0) rotate(0deg); opacity: 0; }
+            10% { opacity: 0.5; } 90% { opacity: 0.35; }
+            100% { transform: translateY(-560px) translateX(20px) rotate(360deg); opacity: 0; }
+        }
+
+        .soda-berries { position: absolute; inset: 0; pointer-events: none; z-index: 15; }
+        .soda-berry { position: absolute; }
+        .soda-berry .cherry-body { display: block; width: 100%; height: 100%; border-radius: 50%; background: radial-gradient(circle at 35% 30%, #ff7a7a, #b3182c 75%); box-shadow: 0 8px 16px -4px rgba(0,0,0,0.5), inset -3px -3px 6px rgba(0,0,0,0.3); }
+        .soda-berry .cherry-leaf { position: absolute; top: -7px; left: 50%; width: 13px; height: 8px; background: #2f9e44; border-radius: 0 100% 0 100%; transform: translateX(-50%) rotate(-20deg); }
+        .soda-berry.zero .cherry-body { background: radial-gradient(circle at 35% 30%, #b9f27a, #2f7a1f 75%); }
+
+        .soda-can-wrap { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; z-index: 10; perspective: 900px; }
+        .soda-can { width: 140px; height: 300px; position: relative; transform-style: preserve-3d; will-change: transform; animation: soda-bob 6s ease-in-out infinite; --rx: 0deg; --ry: 0deg; }
+        @keyframes soda-bob {
+            0%, 100% { transform: translateY(0) rotateX(var(--rx)) rotateY(var(--ry)); }
+            50% { transform: translateY(-14px) rotateX(var(--rx)) rotateY(var(--ry)); }
+        }
+        .soda-can-rim { width: 100%; height: 16px; border-radius: 50%; background: linear-gradient(180deg, #eee, #999); box-shadow: 0 3px 6px rgba(0,0,0,0.4); }
+        .soda-can-rim.bottom { margin-top: -4px; }
+        .soda-can-body {
+            width: 100%; height: 270px; margin-top: -5px; border-radius: 14px; position: relative; overflow: hidden;
+            background: linear-gradient(100deg, #0d5c4c 0%, #12a389 35%, #0a3d33 65%, #062a23 100%);
+            box-shadow: inset -14px 0 24px rgba(0,0,0,0.4), inset 14px 0 24px rgba(255,255,255,0.08), 0 30px 60px -20px rgba(0,0,0,0.7);
+        }
+        .soda-can.zero-theme .soda-can-body { background: linear-gradient(100deg, #0d3f5c 0%, #1288c9 35%, #0a2c3d 65%, #051b26 100%); }
+        .soda-can-shine { position: absolute; top: 0; left: 14%; width: 15%; height: 100%; background: linear-gradient(rgba(255,255,255,0.55), rgba(255,255,255,0.05)); filter: blur(2px); }
+        .soda-can-label { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); text-align: center; font-family: 'Galada', cursive; font-size: 2.1rem; color: #fff; line-height: 0.9; text-shadow: 0 4px 10px rgba(0,0,0,0.4); }
+        .soda-can-label small { font-family: 'JetBrains Mono', monospace; font-size: 0.68rem; letter-spacing: 0.1em; display: block; margin-top: 0.5rem; color: rgba(255,255,255,0.85); }
+
+        .soda-copy { position: absolute; left: 2rem; bottom: 2rem; z-index: 20; pointer-events: none; }
+        .soda-title { font-family: 'Galada', cursive; font-size: clamp(2.4rem, 5vw, 3.6rem); line-height: 0.85; color: #fff; text-shadow: 0 4px 20px rgba(0,0,0,0.4); }
+        .soda-title .outline { color: rgba(255,255,255,0.75); }
+
+        .soda-cards { position: absolute; right: 1.5rem; bottom: 1.5rem; z-index: 20; display: flex; gap: 0.75rem; }
+        .soda-card { display: flex; flex-direction: column; align-items: center; gap: 0.4rem; background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.15); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); padding: 0.6rem 1rem; border-radius: 16px; color: #fff; font-family: 'JetBrains Mono', monospace; font-size: 0.66rem; cursor: pointer; transition: var(--transition); }
+        .soda-card:hover { background: rgba(255,255,255,0.14); }
+        .soda-card.active { border-color: #fbcfe8; box-shadow: 0 0 0 1px #fbcfe8; }
+        .soda-card-swatch { width: 24px; height: 24px; border-radius: 50%; display: block; }
+        .soda-card-swatch.classic { background: radial-gradient(circle at 35% 30%, #1fd1a8, #044e3b); }
+        .soda-card-swatch.zero { background: radial-gradient(circle at 35% 30%, #2fa6e8, #04294e); }
+
+        @media (max-width: 640px) {
+            .soda-stage { height: 620px; }
+            .soda-copy { left: 1.25rem; bottom: 1.25rem; }
+            .soda-cards { right: 1.25rem; bottom: 1.25rem; }
+        }
+
         @media (prefers-reduced-motion: reduce) {
             .status-dot, .blink-cursor { animation: none; }
             .reveal { transition: none; opacity: 1; transform: none; }
             .orbit, .orbit-icon, .cube-inner, .orb-3d, .ring-3d { animation: none; }
             .profile-frame { animation: none; }
+            .soda-can { animation: none; }
         }
     </style>
 </head>
@@ -340,6 +405,7 @@
             <div class="hidden md:flex space-x-7 text-sm font-semibold">
                 <a href="#about" class="hover:text-accent transition">About</a>
                 <a href="#wordpress" class="hover:text-accent transition">WordPress</a>
+                <a href="#concept-lab" class="hover:text-accent transition">Concept Lab</a>
                 <a href="#fullstack" class="hover:text-accent transition">Full-Stack</a>
                 <a href="#systems-lab" class="hover:text-accent transition">Systems Lab</a>
                 <a href="#skills" class="hover:text-accent transition">Skills</a>
@@ -492,11 +558,62 @@
         </div>
     </section>
 
+    <!-- CONCEPT LAB — SODA -->
+    <section id="concept-lab" class="py-24 px-6">
+        <div class="max-w-6xl mx-auto">
+            <div class="text-center reveal mb-12">
+                <span class="mod-tag mb-4 inline-flex">MOD_02 // CONCEPT_LAB</span>
+                <h3 class="text-3xl md:text-4xl font-display font-bold mt-4 mb-3">Concept Lab — Fizz</h3>
+                <p class="text-muted max-w-2xl mx-auto">A fictional beverage-brand interaction study, not client work. Move your cursor across the can, then switch flavors.</p>
+            </div>
+
+            <div id="soda-stage" class="soda-stage reveal">
+                <div class="soda-nav">
+                    <span class="soda-logo"><i class="fas fa-certificate"></i> Fizz</span>
+                    <div class="soda-pills">
+                        <span class="soda-pill active">Home</span>
+                        <span class="soda-pill">Taste</span>
+                        <span class="soda-pill">Eco</span>
+                    </div>
+                </div>
+
+                <div class="soda-bubbles" id="soda-bubbles"></div>
+                <div class="soda-berries" id="soda-berries"></div>
+
+                <div class="soda-can-wrap">
+                    <div class="soda-can" id="soda-can">
+                        <div class="soda-can-rim"></div>
+                        <div class="soda-can-body">
+                            <span class="soda-can-shine"></span>
+                            <span class="soda-can-label">Fizz<br><small id="soda-can-sub">Classic</small></span>
+                        </div>
+                        <div class="soda-can-rim bottom"></div>
+                    </div>
+                </div>
+
+                <div class="soda-copy">
+                    <h4 class="soda-title"><span class="outline">Pure</span><br>Zero</h4>
+                </div>
+
+                <div class="soda-cards">
+                    <button class="soda-card active" data-flavor="classic">
+                        <span class="soda-card-swatch classic"></span>
+                        <span>Classic</span>
+                    </button>
+                    <button class="soda-card" data-flavor="zero">
+                        <span class="soda-card-swatch zero"></span>
+                        <span>Zero Lime</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
     <!-- FULL STACK -->
     <section id="fullstack" class="py-24 px-6">
         <div class="max-w-7xl mx-auto">
             <div class="mb-14 reveal">
-                <span class="mod-tag mb-4 inline-flex">MOD_02 // APPLICATION_SYSTEMS</span>
+                <span class="mod-tag mb-4 inline-flex">MOD_03 // APPLICATION_SYSTEMS</span>
                 <h3 class="text-3xl md:text-4xl font-display font-bold mt-4">Full-Stack Solutions</h3>
                 <p class="text-muted mt-2 max-w-xl">Modular, production-structured applications — from hospitality management to HR dashboards.</p>
             </div>
@@ -594,7 +711,7 @@
     <section id="systems-lab" class="py-24 px-6" style="background-color: var(--bg-sunken); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border);">
         <div class="max-w-6xl mx-auto">
             <div class="text-center reveal mb-12">
-                <span class="mod-tag mb-4 inline-flex">MOD_03 // LIVE_SYSTEMS_LAB</span>
+                <span class="mod-tag mb-4 inline-flex">MOD_04 // LIVE_SYSTEMS_LAB</span>
                 <h3 class="text-3xl md:text-4xl font-display font-bold mt-4 mb-3">Interactive Systems Lab</h3>
                 <p class="text-muted max-w-2xl mx-auto">Five working logic systems spanning the stack — PHP, JavaScript, Python, SQL, and Node.js. Use each demo live, then view the source.</p>
             </div>
@@ -881,7 +998,7 @@ app.<span class="text-pink-400">use</span>((req, res, next) => {
     <section id="skills" class="py-24 px-6">
         <div class="max-w-7xl mx-auto">
             <div class="mb-14 reveal">
-                <span class="mod-tag mb-4 inline-flex">MOD_04 // CAPABILITY_REGISTRY</span>
+                <span class="mod-tag mb-4 inline-flex">MOD_05 // CAPABILITY_REGISTRY</span>
                 <h3 class="text-3xl md:text-4xl font-display font-bold mt-4">Skills &amp; Expertise</h3>
             </div>
             <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-12">
@@ -1202,6 +1319,176 @@ app.<span class="text-pink-400">use</span>((req, res, next) => {
             });
         }, { threshold: 0.15 });
         revealEls.forEach(el => io.observe(el));
+
+        // ================= CONCEPT LAB — FIZZ (soda) =================
+        (function () {
+            const stage = document.getElementById('soda-stage');
+            const can = document.getElementById('soda-can');
+            const subLabel = document.getElementById('soda-can-sub');
+            const berriesWrap = document.getElementById('soda-berries');
+            const bubblesWrap = document.getElementById('soda-bubbles');
+            const cards = stage ? stage.querySelectorAll('.soda-card') : [];
+            if (!stage || !can || !berriesWrap || !bubblesWrap) return;
+
+            const hasGsap = typeof gsap !== 'undefined';
+            const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+            // --- Build scattered berries -----------------------------------
+            const berryCount = 7;
+            const berries = [];
+            for (let i = 0; i < berryCount; i++) {
+                const el = document.createElement('div');
+                el.className = 'soda-berry';
+                el.innerHTML = '<span class="cherry-leaf"></span><span class="cherry-body"></span>';
+                const size = 22 + Math.random() * 28;
+                el.style.width = size + 'px';
+                el.style.height = size + 'px';
+                el.style.top = (10 + Math.random() * 68) + '%';
+                el.style.left = (8 + Math.random() * 78) + '%';
+                berriesWrap.appendChild(el);
+                berries.push({ el, rx: 0, ry: 0, baseX: 0, baseY: 0, angle: Math.random() * 360, dur: 5 + Math.random() * 6, ph: Math.random() * 10 });
+            }
+
+            // --- Cursor tracking: can tilt + berry repulsion origin ---------
+            let mousePX = null, mousePY = null;
+            let targetRx = 0, targetRy = 0, curRx = 0, curRy = 0;
+            let extraSpin = 0;
+
+            stage.addEventListener('mousemove', e => {
+                mousePX = e.clientX; mousePY = e.clientY;
+                const rect = stage.getBoundingClientRect();
+                const nx = (e.clientX - rect.left) / rect.width - 0.5;
+                const ny = (e.clientY - rect.top) / rect.height - 0.5;
+                targetRy = nx * 40;
+                targetRx = -ny * 24;
+            });
+            stage.addEventListener('mouseleave', () => { mousePX = null; mousePY = null; targetRx = 0; targetRy = 0; });
+
+            let switching = false;
+
+            function tick(ts) {
+                curRx += (targetRx - curRx) * 0.08;
+                curRy += (targetRy - curRy) * 0.08;
+                can.style.setProperty('--rx', curRx.toFixed(2) + 'deg');
+                can.style.setProperty('--ry', (curRy + extraSpin).toFixed(2) + 'deg');
+
+                if (!switching) {
+                    const time = (ts || 0) / 1000;
+                    berries.forEach((b, i) => {
+                        const rect = b.el.getBoundingClientRect();
+                        const bx = rect.left + rect.width / 2;
+                        const by = rect.top + rect.height / 2;
+                        let tRx = 0, tRy = 0, speedMult = 1;
+                        if (mousePX !== null) {
+                            const dx = mousePX - bx, dy = mousePY - by;
+                            const dist = Math.sqrt(dx * dx + dy * dy) || 1;
+                            if (dist < 220) {
+                                const force = (220 - dist) / 220;
+                                tRx = (dx / dist) * force * -70;
+                                tRy = (dy / dist) * force * -70;
+                                speedMult = 1 + force * 4;
+                            }
+                        }
+                        b.rx += (tRx - b.rx) * 0.1;
+                        b.ry += (tRy - b.ry) * 0.1;
+                        b.angle += 0.15 * speedMult;
+                        const phase = (time + i * 0.6) * (Math.PI * 2 / b.dur);
+                        const floatY = Math.sin(phase) * 10;
+                        const floatAngle = Math.cos(phase) * 8;
+                        b.el.style.transform = `translate(${(b.rx + b.baseX).toFixed(1)}px, ${(b.ry + b.baseY + floatY).toFixed(1)}px) rotate(${(b.angle + floatAngle).toFixed(1)}deg)`;
+                    });
+                }
+                if (!reduceMotion) requestAnimationFrame(tick);
+            }
+            requestAnimationFrame(tick);
+            if (reduceMotion) tick(0); // render one static frame
+
+            // --- Rising bubbles ------------------------------------------------
+            function spawnBubble() {
+                const b = document.createElement('div');
+                b.className = 'soda-bubble';
+                const size = Math.random() * 10 + 6;
+                b.style.width = size + 'px';
+                b.style.height = size + 'px';
+                b.style.left = Math.random() * 100 + '%';
+                const dur = Math.random() * 4 + 4;
+                b.style.animation = `soda-float-up ${dur}s linear forwards`;
+                bubblesWrap.appendChild(b);
+                setTimeout(() => b.remove(), dur * 1000 + 100);
+            }
+            if (!reduceMotion) setInterval(spawnBubble, 450);
+
+            // --- Flavor switch: color morph + can spin + berry implode/explode -
+            function switchFlavor(flavor) {
+                if (switching) return;
+                switching = true;
+                const toZero = flavor === 'zero';
+                const target = toZero
+                    ? { inner: '#0b4f8a', mid: '#04294e', outer: '#010c14' }
+                    : { inner: '#0b8a78', mid: '#044e3b', outer: '#011411' };
+
+                if (hasGsap) {
+                    gsap.to(stage, { '--soda-inner': target.inner, '--soda-mid': target.mid, '--soda-outer': target.outer, duration: 1.5, ease: 'power2.inOut' });
+
+                    const spin = { val: 0, blur: 0 };
+                    gsap.to(spin, {
+                        val: 360, blur: 10, duration: 0.6, ease: 'power2.in',
+                        onUpdate: () => { extraSpin = spin.val; can.style.filter = `blur(${spin.blur}px)`; },
+                        onComplete: () => {
+                            can.classList.toggle('zero-theme', toZero);
+                            subLabel.textContent = toZero ? 'Zero Lime' : 'Classic';
+                            gsap.to(spin, {
+                                val: 720, blur: 0, duration: 1.2, ease: 'back.out(1.7)',
+                                onUpdate: () => { extraSpin = spin.val; can.style.filter = `blur(${spin.blur}px)`; },
+                                onComplete: () => { extraSpin = 0; can.style.filter = 'none'; }
+                            });
+                        }
+                    });
+
+                    let completed = 0;
+                    berries.forEach(b => {
+                        gsap.set(b.el, { x: b.rx + b.baseX, y: b.ry + b.baseY, rotation: b.angle });
+                        const nextX = (Math.random() - 0.5) * Math.min(300, stage.clientWidth * 0.55);
+                        const nextY = (Math.random() - 0.5) * Math.min(180, stage.clientHeight * 0.45);
+                        const tl = gsap.timeline();
+                        tl.to(b.el, {
+                            x: 0, y: 0, rotation: '+=45', scale: 0.15, opacity: 0, duration: 0.5, ease: 'power2.in',
+                            onComplete: () => { b.el.classList.toggle('zero', toZero); }
+                        })
+                        .to(b.el, { duration: 0.25 })
+                        .to(b.el, {
+                            x: nextX, y: nextY, rotation: '+=45', scale: 1, opacity: 1, duration: 0.9, ease: 'back.out(1.5)',
+                            onComplete: () => {
+                                b.baseX = nextX; b.baseY = nextY; b.rx = 0; b.ry = 0;
+                                b.el.style.transform = '';
+                                completed++;
+                                if (completed === berries.length) switching = false;
+                            }
+                        });
+                    });
+                } else {
+                    // Fallback without GSAP: instant swap
+                    stage.style.setProperty('--soda-inner', target.inner);
+                    stage.style.setProperty('--soda-mid', target.mid);
+                    stage.style.setProperty('--soda-outer', target.outer);
+                    can.classList.toggle('zero-theme', toZero);
+                    subLabel.textContent = toZero ? 'Zero Lime' : 'Classic';
+                    berries.forEach(b => b.el.classList.toggle('zero', toZero));
+                    switching = false;
+                }
+            }
+
+            cards.forEach(card => {
+                card.addEventListener('click', () => {
+                    if (switching) return;
+                    cards.forEach(c => c.classList.remove('active'));
+                    card.classList.add('active');
+                    switchFlavor(card.dataset.flavor);
+                });
+            });
+        })();
+
+
     </script>
 </body>
 </html>
