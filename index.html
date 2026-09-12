@@ -506,10 +506,24 @@
 
         @media (max-width: 1080px), (max-height: 720px) { .sk-sectors { display: none; } }
         @media (max-width: 720px) {
-            .sk-app { height: 560px; border-radius: 20px; }
-            .sk-left { width: 50%; min-width: 0; }
-            .sk-strip { left: 16px; }
-            .sk-card { width: min(58vw, 260px); }
+            .sk-app { height: 480px; border-radius: 20px; }
+            .sk-left { width: 92px; min-width: 0; flex: none; }
+            .sk-left::after { height: 40px; }
+            .sk-strip { left: 24px; gap: 12px; }
+            .sk-pill {
+                width: 44px; height: 44px; padding: 0; border-radius: 50%;
+                display: flex; align-items: center; justify-content: center;
+            }
+            .sk-pill .sk-ic { width: 100%; height: 100%; font-size: 16px; background: transparent; }
+            .sk-pill.active .sk-ic { background: transparent; }
+            .sk-pill .sk-tx { display: none; }
+            .sk-card { width: min(48vw, 190px); }
+            .sk-ct { font-size: 8.5px; right: 28px; }
+            .sk-badge { font-size: 9px; padding: 5px 12px 5px 6px; }
+            .sk-bic { width: 17px; height: 17px; }
+            .sk-brand { font-size: 8px; letter-spacing: 0.16em; bottom: 10px; }
+            .sk-glo { display: none; }
+            .sk-rail { right: 8px; }
         }
         @media (prefers-reduced-motion: reduce) {
             .sk-deck.ready .sk-card { transition-duration: 0.15s; }
@@ -1595,7 +1609,7 @@ app.<span class="text-pink-400">use</span>((req, res, next) => {
                 const b = document.createElement('button');
                 b.type = 'button'; b.className = 'sk-pill';
                 b.dataset.o = oi;
-                b.innerHTML = `<span class="sk-ic">${o.icon}</span><span>${o.pill}</span>`;
+                b.innerHTML = `<span class="sk-ic">${o.icon}</span><span class="sk-tx">${o.pill}</span>`;
                 skStrip.appendChild(b);
             }
             const pills = Array.from(skStrip.children);
