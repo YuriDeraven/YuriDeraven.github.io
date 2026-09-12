@@ -10,8 +10,9 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&family=Galada&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&family=Galada&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 
     <script>
         if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
@@ -304,29 +305,11 @@
             100% { transform: translateY(-560px) translateX(20px) rotate(360deg); opacity: 0; }
         }
 
-        .soda-berries { position: absolute; inset: 0; pointer-events: none; z-index: 15; }
-        .soda-berry { position: absolute; }
-        .soda-berry .cherry-body { display: block; width: 100%; height: 100%; border-radius: 50%; background: radial-gradient(circle at 35% 30%, #ff7a7a, #b3182c 75%); box-shadow: 0 8px 16px -4px rgba(0,0,0,0.5), inset -3px -3px 6px rgba(0,0,0,0.3); }
-        .soda-berry .cherry-leaf { position: absolute; top: -7px; left: 50%; width: 13px; height: 8px; background: #2f9e44; border-radius: 0 100% 0 100%; transform: translateX(-50%) rotate(-20deg); }
-        .soda-berry.zero .cherry-body { background: radial-gradient(circle at 35% 30%, #b9f27a, #2f7a1f 75%); }
-
-        .soda-can-wrap { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; z-index: 10; perspective: 900px; }
-        .soda-can { width: 140px; height: 300px; position: relative; transform-style: preserve-3d; will-change: transform; animation: soda-bob 6s ease-in-out infinite; --rx: 0deg; --ry: 0deg; }
-        @keyframes soda-bob {
-            0%, 100% { transform: translateY(0) rotateX(var(--rx)) rotateY(var(--ry)); }
-            50% { transform: translateY(-14px) rotateX(var(--rx)) rotateY(var(--ry)); }
-        }
-        .soda-can-rim { width: 100%; height: 16px; border-radius: 50%; background: linear-gradient(180deg, #eee, #999); box-shadow: 0 3px 6px rgba(0,0,0,0.4); }
-        .soda-can-rim.bottom { margin-top: -4px; }
-        .soda-can-body {
-            width: 100%; height: 270px; margin-top: -5px; border-radius: 14px; position: relative; overflow: hidden;
-            background: linear-gradient(100deg, #0d5c4c 0%, #12a389 35%, #0a3d33 65%, #062a23 100%);
-            box-shadow: inset -14px 0 24px rgba(0,0,0,0.4), inset 14px 0 24px rgba(255,255,255,0.08), 0 30px 60px -20px rgba(0,0,0,0.7);
-        }
-        .soda-can.zero-theme .soda-can-body { background: linear-gradient(100deg, #0d3f5c 0%, #1288c9 35%, #0a2c3d 65%, #051b26 100%); }
-        .soda-can-shine { position: absolute; top: 0; left: 14%; width: 15%; height: 100%; background: linear-gradient(rgba(255,255,255,0.55), rgba(255,255,255,0.05)); filter: blur(2px); }
-        .soda-can-label { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); text-align: center; font-family: 'Galada', cursive; font-size: 2.1rem; color: #fff; line-height: 0.9; text-shadow: 0 4px 10px rgba(0,0,0,0.4); }
-        .soda-can-label small { font-family: 'JetBrains Mono', monospace; font-size: 0.68rem; letter-spacing: 0.1em; display: block; margin-top: 0.5rem; color: rgba(255,255,255,0.85); }
+        .fizz-gl { position: absolute; inset: 0; z-index: 10; cursor: grab; }
+        .fizz-gl canvas { display: block; width: 100%; height: 100%; }
+        .fizz-gl:active { cursor: grabbing; }
+        .fizz-loading { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font-family: 'JetBrains Mono', monospace; font-size: 0.7rem; letter-spacing: 0.14em; color: rgba(255,255,255,0.4); text-transform: uppercase; pointer-events: none; transition: opacity 0.4s ease; }
+        .fizz-loading.is-hidden { opacity: 0; }
 
         .soda-copy { position: absolute; left: 2rem; bottom: 2rem; z-index: 20; pointer-events: none; }
         .soda-title { font-family: 'Galada', cursive; font-size: clamp(2.4rem, 5vw, 3.6rem); line-height: 0.85; color: #fff; text-shadow: 0 4px 20px rgba(0,0,0,0.4); }
@@ -346,12 +329,194 @@
             .soda-cards { right: 1.25rem; bottom: 1.25rem; }
         }
 
+        /* Arcade — Pulse */
+        .pulse-root { background: var(--bg-panel); border: 1px solid var(--border); border-radius: 24px; padding: 1.25rem; max-width: 480px; margin: 0 auto; box-shadow: 0 30px 60px -30px rgba(0,0,0,0.55); }
+        .pulse-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; gap: 0.75rem; }
+        .pulse-eyebrow { font-family: 'JetBrains Mono', monospace; font-size: 0.62rem; letter-spacing: 0.2em; color: var(--text-muted); text-transform: uppercase; }
+        .pulse-header h4 { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 1.4rem; margin-top: 0.15rem; background: linear-gradient(90deg, var(--accent), var(--accent-2)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+        .pulse-stats { display: flex; align-items: center; gap: 0.4rem; }
+        .pulse-stat { background: var(--bg-sunken); border: 1px solid var(--border); border-radius: 10px; padding: 0.32rem 0.5rem; min-width: 46px; text-align: center; }
+        .pulse-stat span { display: block; font-family: 'JetBrains Mono', monospace; font-size: 0.54rem; letter-spacing: 0.08em; color: var(--text-muted); text-transform: uppercase; }
+        .pulse-stat strong { font-family: 'JetBrains Mono', monospace; font-size: 0.8rem; }
+        .pulse-stat.combo-stat strong { color: var(--accent-2); }
+        .pulse-icon-btn { width: 34px; height: 34px; border-radius: 10px; border: 1px solid var(--border); background: var(--bg-sunken); color: var(--text-primary); display: flex; align-items: center; justify-content: center; transition: var(--transition); cursor: pointer; font-size: 0.78rem; }
+        .pulse-icon-btn:hover { border-color: var(--accent); color: var(--accent); }
+
+        .pulse-stage { position: relative; aspect-ratio: 1 / 1; border-radius: 18px; overflow: hidden; border: 1px solid var(--border); background: #03040a; touch-action: none; outline: none; transition: box-shadow 0.18s ease; }
+        .pulse-stage.is-flash { box-shadow: 0 0 0 2px color-mix(in srgb, var(--accent-2) 55%, transparent), 0 0 40px -6px color-mix(in srgb, var(--accent-2) 60%, transparent); }
+        .pulse-stage canvas { display: block; width: 100%; height: 100%; }
+
+        .pulse-overlay { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; padding: 1.1rem; background: rgba(3,4,10,0.66); backdrop-filter: blur(3px); }
+        .pulse-overlay.is-hidden { display: none; }
+        .pulse-card { width: 100%; max-width: 380px; background: rgba(10,12,20,0.95); border: 1px solid rgba(255,255,255,0.08); border-radius: 16px; padding: 1.4rem; color: #f4f4f5; box-shadow: 0 0 0 1px rgba(255,255,255,0.03), 0 30px 60px -20px rgba(0,0,0,0.7); }
+        .pulse-card h5 { font-family: 'Space Grotesk', sans-serif; font-size: 1.5rem; font-weight: 700; margin: 0.35rem 0 0.5rem; }
+        .pulse-card p { font-size: 0.82rem; color: #a1a1aa; line-height: 1.5; }
+        .pulse-tag { font-family: 'JetBrains Mono', monospace; font-size: 0.62rem; letter-spacing: 0.18em; color: #a1a1aa; text-transform: uppercase; }
+        .pulse-btn-row { display: flex; gap: 0.55rem; margin-top: 1.1rem; flex-wrap: wrap; }
+        .pulse-btn { flex: 1; min-width: 110px; padding: 0.68rem 1rem; border-radius: 10px; font-family: 'JetBrains Mono', monospace; font-size: 0.76rem; font-weight: 600; cursor: pointer; border: 1px solid transparent; text-align: center; }
+        .pulse-btn-primary { background: linear-gradient(90deg, #4f8cff, #22d3ee); color: #03040a; }
+        .pulse-btn-primary:hover { filter: brightness(1.1); }
+        .pulse-btn-secondary { background: rgba(255,255,255,0.08); color: #f4f4f5; border-color: rgba(255,255,255,0.15); }
+        .pulse-btn-secondary:hover { background: rgba(255,255,255,0.14); }
+
+        .pulse-score-grid { display: flex; gap: 0.55rem; margin-top: 0.9rem; }
+        .pulse-score-box { flex: 1; background: #03040a; border: 1px solid rgba(255,255,255,0.1); border-radius: 10px; padding: 0.6rem 0.8rem; }
+        .pulse-score-box span { display: block; font-family: 'JetBrains Mono', monospace; font-size: 0.58rem; letter-spacing: 0.14em; color: #71717a; text-transform: uppercase; }
+        .pulse-score-box strong { font-family: 'JetBrains Mono', monospace; font-size: 1.25rem; }
+
+        .pulse-field { margin-top: 1rem; }
+        .pulse-field-label { font-family: 'JetBrains Mono', monospace; font-size: 0.6rem; letter-spacing: 0.14em; color: #a1a1aa; text-transform: uppercase; display: block; margin-bottom: 0.4rem; }
+        .pulse-speed-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.4rem; }
+        .pulse-speed-btn { padding: 0.5rem 0; border-radius: 8px; border: 1px solid rgba(255,255,255,0.12); background: transparent; color: #a1a1aa; font-family: 'JetBrains Mono', monospace; font-size: 0.72rem; text-transform: capitalize; cursor: pointer; }
+        .pulse-speed-btn.active { border-color: #22d3ee; background: rgba(34,211,238,0.12); color: #f4f4f5; }
+        .pulse-toggle-row { display: flex; align-items: center; justify-content: space-between; margin-top: 0.7rem; font-size: 0.8rem; }
+        .pulse-toggle-row input { width: 17px; height: 17px; accent-color: #22d3ee; }
+
+        .pulse-dpad { display: grid; grid-template-columns: repeat(3, 1fr); grid-template-rows: repeat(3, 1fr); gap: 0.4rem; width: 176px; margin: 1rem auto 0; }
+        .pulse-dpad button { width: 52px; height: 52px; border-radius: 12px; border: 1px solid var(--border); background: var(--bg-sunken); color: var(--text-primary); display: flex; align-items: center; justify-content: center; cursor: pointer; }
+        .pulse-dpad button:active { background: linear-gradient(90deg, var(--accent), var(--accent-2)); color: #fff; border-color: var(--accent); }
+        @media (min-width: 640px) { .pulse-dpad { display: none; } }
+
+        /* Skills — Capability Registry marbled deck */
+        .sk-app {
+            position: relative; height: 640px; display: flex; border-radius: 28px; overflow: hidden;
+            box-shadow: 0 30px 80px rgba(0,0,0,0.35);
+            user-select: none; -webkit-user-select: none;
+            cursor: grab; touch-action: none; outline: none;
+            font-family: 'Inter', system-ui, sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .sk-app.sk-grabbing { cursor: grabbing; }
+
+        .sk-left {
+            width: 44%; min-width: 220px; position: relative; overflow: hidden;
+            background: radial-gradient(120% 90% at 18% 0%, #c05cf6 0%, #b44ef0 55%, #a83eea 100%);
+        }
+        .sk-left::after {
+            content: ''; position: absolute; left: 0; right: 0; top: 0; height: 60px;
+            background: linear-gradient(180deg, rgba(182,76,240,0.7) 0%, rgba(182,76,240,0.3) 55%, rgba(182,76,240,0) 100%);
+            z-index: 4; pointer-events: none;
+        }
+        .sk-strip { position: absolute; left: 30px; top: 0; display: flex; flex-direction: column; gap: 15px; will-change: transform; }
+        .sk-pill {
+            display: inline-flex; align-items: center; gap: 10px;
+            padding: 8px 18px 8px 8px; border-radius: 999px;
+            border: 1px solid rgba(255,255,255,0.38);
+            background: rgba(255,255,255,0.30);
+            -webkit-backdrop-filter: blur(9px); backdrop-filter: blur(9px);
+            box-shadow: 0 4px 14px rgba(74,16,130,0.10);
+            color: #4a1a80; font-family: inherit; font-size: 12px; font-weight: 800;
+            letter-spacing: 0.09em; line-height: 1; text-transform: uppercase; white-space: nowrap;
+            cursor: pointer;
+            transition: background 0.22s ease, border-color 0.22s ease, color 0.22s ease, box-shadow 0.22s ease;
+        }
+        .sk-pill .sk-ic {
+            width: 26px; height: 26px; border-radius: 50%; flex: none;
+            background: rgba(90,26,160,0.16); display: grid; place-items: center;
+            font-size: 13px; color: #43136f;
+            transition: background 0.22s ease;
+        }
+        .sk-pill:hover { background: rgba(255,255,255,0.46); }
+        .sk-pill.active {
+            background: #fff; border-color: #fff; color: #2a0e4f;
+            box-shadow: 0 16px 34px rgba(58,8,110,0.30);
+            animation: sk-pop 0.4s cubic-bezier(0.34,1.4,0.4,1);
+        }
+        .sk-pill.active .sk-ic { background: #f1e7fb; }
+        @keyframes sk-pop { 0% { transform: scale(0.9); } 100% { transform: scale(1); } }
+
+        .sk-right { flex: 1; position: relative; overflow: hidden; background: #efe8df; }
+        .sk-blob {
+            position: absolute; top: -46px; right: -34px; width: 230px; height: 230px; border-radius: 50%;
+            background: radial-gradient(circle at 35% 32%, #b5e0f5 0%, #8fc9de 55%, #b3a4ea 100%);
+            filter: blur(7px); opacity: 0.5; z-index: 0; pointer-events: none;
+        }
+        .sk-deck { position: absolute; inset: 0; z-index: 1; }
+        .sk-card {
+            position: absolute; left: 50%; top: 50%;
+            width: clamp(200px, 22vw, 300px); aspect-ratio: 0.79;
+            border-radius: 26px; overflow: hidden;
+            border: 1px solid rgba(255,255,255,0.08);
+            box-shadow: 0 34px 70px rgba(46,26,12,0.38), 0 8px 22px rgba(46,26,12,0.25);
+            will-change: transform, opacity;
+            visibility: visible;
+        }
+        .sk-deck.ready .sk-card {
+            transition: transform 0.62s cubic-bezier(0.22,0.85,0.22,1), opacity 0.45s ease, visibility 0s linear 0.45s;
+        }
+        .sk-deck.ready .sk-card:not(.sk-far) {
+            transition: transform 0.62s cubic-bezier(0.22,0.85,0.22,1), opacity 0.45s ease, visibility 0s;
+        }
+        .sk-card.sk-far { visibility: hidden; }
+        .sk-marble { position: absolute; inset: -22%; }
+        .sk-gloss {
+            position: absolute; inset: 0; pointer-events: none; mix-blend-mode: screen;
+            background: radial-gradient(58% 42% at 26% 14%, rgba(255,255,255,0.14), rgba(255,255,255,0) 70%);
+        }
+        .sk-card::after {
+            content: ''; position: absolute; inset: 0; border-radius: inherit; pointer-events: none;
+            box-shadow: inset 0 0 0 1px rgba(255,255,255,0.06), inset 0 -40px 80px rgba(0,0,0,0.28);
+        }
+        .sk-ct {
+            position: absolute; top: 16px; left: 16px; right: 34px;
+            display: flex; gap: 9px; align-items: flex-start;
+            color: rgba(255,255,255,0.93); font-family: 'JetBrains Mono', monospace;
+            font-size: 9.5px; font-weight: 600;
+            letter-spacing: 0.08em; line-height: 1.8; text-transform: uppercase;
+            text-shadow: 0 1px 10px rgba(0,0,0,0.45);
+        }
+        .sk-cstar { font-size: 12px; opacity: 0.9; transform: translateY(1px); flex: none; }
+        .sk-badge {
+            position: absolute; left: 14px; bottom: 14px;
+            display: flex; align-items: center; gap: 8px;
+            padding: 6px 14px 6px 7px; border-radius: 999px;
+            background: rgba(255,255,255,0.85);
+            -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px);
+            color: #241335; font-size: 10.5px; font-weight: 800; letter-spacing: 0.08em;
+            text-transform: uppercase; box-shadow: 0 6px 18px rgba(20,10,5,0.25);
+        }
+        .sk-bic { width: 20px; height: 20px; border-radius: 50%; background: rgba(36,19,53,0.12); display: grid; place-items: center; font-size: 10px; flex: none; }
+
+        .sk-sectors {
+            position: absolute; right: 28px; bottom: 28px; width: 260px;
+            background: #fff; border-radius: 22px; padding: 20px 22px 18px;
+            box-shadow: 0 24px 60px rgba(40,25,10,0.18), 0 4px 14px rgba(40,25,10,0.08);
+            z-index: 18; pointer-events: none;
+        }
+        .sk-sectors h2 { font-size: 16px; font-weight: 800; color: #0f172a; letter-spacing: -0.01em; margin-bottom: 10px; font-family: 'Inter', sans-serif; }
+        .sk-sectors ul { list-style: none; }
+        .sk-sectors li {
+            display: flex; align-items: center; gap: 10px;
+            padding: 5px 0; font-size: 12.5px; font-weight: 600; color: #334155; letter-spacing: 0.005em;
+        }
+        .sk-sectors .sk-ck { color: #16a34a; font-size: 13px; flex: none; font-weight: 700; }
+
+        .sk-rail { position: absolute; right: 12px; top: 13%; height: 66%; width: 6px; border-radius: 99px; background: rgba(46,26,12,0.10); cursor: pointer; touch-action: none; z-index: 20; }
+        .sk-thumb { position: absolute; left: 0; top: 0; width: 100%; height: 64px; border-radius: 99px; background: rgba(46,26,12,0.32); }
+        .sk-brand {
+            position: absolute; bottom: 14px; left: 0; right: 0; text-align: center; z-index: 10;
+            font-size: 10px; font-weight: 800; letter-spacing: 0.22em; color: rgba(46,26,12,0.45); text-transform: uppercase;
+            font-family: 'Inter', sans-serif;
+        }
+        .sk-glo {
+            position: absolute; right: 16px; bottom: 10px; width: 26px; height: 26px; border-radius: 50%;
+            border: 1.5px solid rgba(46,26,12,0.4); display: grid; place-items: center;
+            font-size: 11px; color: rgba(46,26,12,0.5); z-index: 10;
+        }
+
+        @media (max-width: 1080px), (max-height: 720px) { .sk-sectors { display: none; } }
+        @media (max-width: 720px) {
+            .sk-app { height: 560px; border-radius: 20px; }
+            .sk-left { width: 50%; min-width: 0; }
+            .sk-strip { left: 16px; }
+            .sk-card { width: min(58vw, 260px); }
+        }
         @media (prefers-reduced-motion: reduce) {
+            .sk-deck.ready .sk-card { transition-duration: 0.15s; }
             .status-dot, .blink-cursor { animation: none; }
             .reveal { transition: none; opacity: 1; transform: none; }
             .orbit, .orbit-icon, .cube-inner, .orb-3d, .ring-3d { animation: none; }
             .profile-frame { animation: none; }
-            .soda-can { animation: none; }
         }
     </style>
 </head>
@@ -406,6 +571,7 @@
                 <a href="#about" class="hover:text-accent transition">About</a>
                 <a href="#wordpress" class="hover:text-accent transition">WordPress</a>
                 <a href="#concept-lab" class="hover:text-accent transition">Concept Lab</a>
+                <a href="#arcade" class="hover:text-accent transition">Arcade</a>
                 <a href="#fullstack" class="hover:text-accent transition">Full-Stack</a>
                 <a href="#systems-lab" class="hover:text-accent transition">Systems Lab</a>
                 <a href="#skills" class="hover:text-accent transition">Skills</a>
@@ -564,7 +730,7 @@
             <div class="text-center reveal mb-12">
                 <span class="mod-tag mb-4 inline-flex">MOD_02 // CONCEPT_LAB</span>
                 <h3 class="text-3xl md:text-4xl font-display font-bold mt-4 mb-3">Concept Lab — Fizz</h3>
-                <p class="text-muted max-w-2xl mx-auto">A fictional beverage-brand interaction study, not client work. Move your cursor across the can, then switch flavors.</p>
+                <p class="text-muted max-w-2xl mx-auto">A fictional beverage-brand interaction study, not client work. Real WebGL 3D — move your cursor across the can, then switch flavors.</p>
             </div>
 
             <div id="soda-stage" class="soda-stage reveal">
@@ -578,17 +744,9 @@
                 </div>
 
                 <div class="soda-bubbles" id="soda-bubbles"></div>
-                <div class="soda-berries" id="soda-berries"></div>
 
-                <div class="soda-can-wrap">
-                    <div class="soda-can" id="soda-can">
-                        <div class="soda-can-rim"></div>
-                        <div class="soda-can-body">
-                            <span class="soda-can-shine"></span>
-                            <span class="soda-can-label">Fizz<br><small id="soda-can-sub">Classic</small></span>
-                        </div>
-                        <div class="soda-can-rim bottom"></div>
-                    </div>
+                <div id="fizz-gl" class="fizz-gl">
+                    <span id="fizz-loading" class="fizz-loading">Loading 3D…</span>
                 </div>
 
                 <div class="soda-copy">
@@ -609,11 +767,53 @@
         </div>
     </section>
 
+
+    <!-- ARCADE — PULSE -->
+    <section id="arcade" class="py-24 px-6" style="background-color: var(--bg-sunken); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border);">
+        <div class="max-w-3xl mx-auto">
+            <div class="text-center reveal mb-12">
+                <span class="mod-tag mb-4 inline-flex">MOD_03 // ARCADE</span>
+                <h3 class="text-3xl md:text-4xl font-display font-bold mt-4 mb-3">Arcade — Pulse</h3>
+                <p class="text-muted max-w-2xl mx-auto">A neon grid-runner built from scratch — combo scoring, glow trails, screen shake, procedural sound. WASD/arrows, swipe, or the pad below.</p>
+            </div>
+
+            <div id="pulse-root" class="pulse-root reveal">
+                <div class="pulse-header">
+                    <div>
+                        <span class="pulse-eyebrow">Arcade</span>
+                        <h4>PULSE</h4>
+                    </div>
+                    <div class="pulse-stats">
+                        <div class="pulse-stat"><span>Score</span><strong id="pulse-score">0000</strong></div>
+                        <div class="pulse-stat combo-stat" id="pulse-combo-wrap" hidden><span>Combo</span><strong id="pulse-combo">×1</strong></div>
+                        <div class="pulse-stat"><span>Best</span><strong id="pulse-best">0000</strong></div>
+                        <button id="pulse-mute" type="button" class="pulse-icon-btn" aria-label="Mute"><i class="fas fa-volume-high"></i></button>
+                        <button id="pulse-pause" type="button" class="pulse-icon-btn" aria-label="Pause" hidden><i class="fas fa-pause"></i></button>
+                    </div>
+                </div>
+
+                <div class="pulse-stage">
+                    <canvas id="pulse-canvas" tabindex="0" aria-label="Pulse playfield"></canvas>
+                    <div id="pulse-overlay" class="pulse-overlay">
+                        <div id="pulse-card" class="pulse-card"></div>
+                    </div>
+                </div>
+
+                <div id="pulse-dpad" class="pulse-dpad">
+                    <span></span><button type="button" data-dir="up" aria-label="Up"><i class="fas fa-chevron-up"></i></button><span></span>
+                    <button type="button" data-dir="left" aria-label="Left"><i class="fas fa-chevron-left"></i></button><span></span><button type="button" data-dir="right" aria-label="Right"><i class="fas fa-chevron-right"></i></button>
+                    <span></span><button type="button" data-dir="down" aria-label="Down"><i class="fas fa-chevron-down"></i></button><span></span>
+                </div>
+                <p class="text-center text-xs font-mono text-muted mt-3">Hover or tap the board to give it keyboard focus.</p>
+            </div>
+        </div>
+    </section>
+
     <!-- FULL STACK -->
     <section id="fullstack" class="py-24 px-6">
         <div class="max-w-7xl mx-auto">
             <div class="mb-14 reveal">
-                <span class="mod-tag mb-4 inline-flex">MOD_03 // APPLICATION_SYSTEMS</span>
+                <span class="mod-tag mb-4 inline-flex">MOD_04 // APPLICATION_SYSTEMS</span>
                 <h3 class="text-3xl md:text-4xl font-display font-bold mt-4">Full-Stack Solutions</h3>
                 <p class="text-muted mt-2 max-w-xl">Modular, production-structured applications — from hospitality management to HR dashboards.</p>
             </div>
@@ -711,7 +911,7 @@
     <section id="systems-lab" class="py-24 px-6" style="background-color: var(--bg-sunken); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border);">
         <div class="max-w-6xl mx-auto">
             <div class="text-center reveal mb-12">
-                <span class="mod-tag mb-4 inline-flex">MOD_04 // LIVE_SYSTEMS_LAB</span>
+                <span class="mod-tag mb-4 inline-flex">MOD_05 // LIVE_SYSTEMS_LAB</span>
                 <h3 class="text-3xl md:text-4xl font-display font-bold mt-4 mb-3">Interactive Systems Lab</h3>
                 <p class="text-muted max-w-2xl mx-auto">Five working logic systems spanning the stack — PHP, JavaScript, Python, SQL, and Node.js. Use each demo live, then view the source.</p>
             </div>
@@ -997,49 +1197,65 @@ app.<span class="text-pink-400">use</span>((req, res, next) => {
     <!-- SKILLS -->
     <section id="skills" class="py-24 px-6">
         <div class="max-w-7xl mx-auto">
-            <div class="mb-14 reveal">
-                <span class="mod-tag mb-4 inline-flex">MOD_05 // CAPABILITY_REGISTRY</span>
-                <h3 class="text-3xl md:text-4xl font-display font-bold mt-4">Skills &amp; Expertise</h3>
+            <div class="mb-10 reveal">
+                <span class="mod-tag mb-4 inline-flex">MOD_06 // CAPABILITY_REGISTRY</span>
+                <h3 class="text-3xl md:text-4xl font-display font-bold mt-4 mb-3">Skills &amp; Expertise</h3>
+                <p class="text-muted max-w-2xl">Scroll, drag, or flick through the deck — marbled capability cards synced to a frosted pill index.</p>
             </div>
-            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-12">
-                <div class="space-y-6 reveal">
-                    <h4 class="text-xl font-display font-bold text-accent">Design &amp; Marketing</h4>
-                    <div class="flex flex-wrap gap-2">
-                        <span class="skill-badge">Adobe Illustrator</span>
-                        <span class="skill-badge">Adobe Photoshop</span>
-                        <span class="skill-badge">Canva</span>
-                        <span class="skill-badge">Figma</span>
-                        <span class="skill-badge">Google Ads</span>
-                        <span class="skill-badge">GA4</span>
-                        <span class="skill-badge">Meta Ads Manager</span>
-                        <span class="skill-badge">SEMrush / Ahrefs</span>
-                        <span class="skill-badge starred">WordPress Expert</span>
-                    </div>
-                </div>
 
-                <div class="space-y-6 reveal">
-                    <h4 class="text-xl font-display font-bold text-accent-2">Engineering</h4>
-                    <div class="flex flex-wrap gap-2">
-                        <span class="skill-badge">Git / GitHub</span>
-                        <span class="skill-badge">HTML / CSS</span>
-                        <span class="skill-badge starred">PHP / WordPress API</span>
-                        <span class="skill-badge">JavaScript</span>
-                        <span class="skill-badge">Node.js</span>
-                        <span class="skill-badge starred">React / Next.js 15</span>
-                        <span class="skill-badge">SQL</span>
-                    </div>
-                </div>
+            <div class="reveal">
+                <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+                    <defs>
+                        <filter id="skm0" x="-25%" y="-25%" width="150%" height="150%">
+                            <feTurbulence type="fractalNoise" baseFrequency="0.012 0.019" numOctaves="2" seed="4" result="n"/>
+                            <feDisplacementMap in="SourceGraphic" in2="n" scale="96" xChannelSelector="R" yChannelSelector="G"/>
+                        </filter>
+                        <filter id="skm1" x="-25%" y="-25%" width="150%" height="150%">
+                            <feTurbulence type="fractalNoise" baseFrequency="0.009 0.016" numOctaves="2" seed="11" result="n"/>
+                            <feDisplacementMap in="SourceGraphic" in2="n" scale="112" xChannelSelector="R" yChannelSelector="G"/>
+                        </filter>
+                        <filter id="skm2" x="-25%" y="-25%" width="150%" height="150%">
+                            <feTurbulence type="fractalNoise" baseFrequency="0.014 0.022" numOctaves="2" seed="7" result="n"/>
+                            <feDisplacementMap in="SourceGraphic" in2="n" scale="84" xChannelSelector="R" yChannelSelector="G"/>
+                        </filter>
+                        <filter id="skm3" x="-25%" y="-25%" width="150%" height="150%">
+                            <feTurbulence type="fractalNoise" baseFrequency="0.011 0.017" numOctaves="2" seed="23" result="n"/>
+                            <feDisplacementMap in="SourceGraphic" in2="n" scale="102" xChannelSelector="R" yChannelSelector="G"/>
+                        </filter>
+                        <filter id="skm4" x="-25%" y="-25%" width="150%" height="150%">
+                            <feTurbulence type="fractalNoise" baseFrequency="0.008 0.014" numOctaves="2" seed="31" result="n"/>
+                            <feDisplacementMap in="SourceGraphic" in2="n" scale="118" xChannelSelector="R" yChannelSelector="G"/>
+                        </filter>
+                        <filter id="skm5" x="-25%" y="-25%" width="150%" height="150%">
+                            <feTurbulence type="fractalNoise" baseFrequency="0.013 0.02" numOctaves="2" seed="17" result="n"/>
+                            <feDisplacementMap in="SourceGraphic" in2="n" scale="90" xChannelSelector="R" yChannelSelector="G"/>
+                        </filter>
+                    </defs>
+                </svg>
 
-                <div class="panel p-8 rounded-3xl shadow-sm reveal">
-                    <h4 class="text-xl font-display font-bold mb-6">Experience Sectors</h4>
-                    <ul class="space-y-3 text-muted">
-                        <li class="flex items-center gap-2"><i class="fas fa-check text-green-500"></i> Tech / SaaS &amp; FinTech</li>
-                        <li class="flex items-center gap-2"><i class="fas fa-check text-green-500"></i> Healthcare / MedTech</li>
-                        <li class="flex items-center gap-2"><i class="fas fa-check text-green-500"></i> Education / EdTech</li>
-                        <li class="flex items-center gap-2"><i class="fas fa-check text-green-500"></i> E-commerce / Retail / B2C</li>
-                        <li class="flex items-center gap-2"><i class="fas fa-check text-green-500"></i> NGO &amp; Marketing / Advertising</li>
-                    </ul>
+                <div class="sk-app" id="sk-app" tabindex="0" aria-label="Skills capability deck">
+                    <aside class="sk-left" id="sk-left">
+                        <div class="sk-strip" id="sk-strip"></div>
+                    </aside>
+                    <main class="sk-right">
+                        <div class="sk-blob"></div>
+                        <div class="sk-deck" id="sk-deck"></div>
+                        <div class="sk-brand">✦ CAPABILITY REGISTRY ™</div>
+                        <div class="sk-glo">❋</div>
+                        <div class="sk-rail" id="sk-rail"><div class="sk-thumb" id="sk-thumb"></div></div>
+                        <aside class="sk-sectors">
+                            <h2>Experience Sectors</h2>
+                            <ul>
+                                <li><span class="sk-ck">✔</span>Tech / SaaS &amp; FinTech</li>
+                                <li><span class="sk-ck">✔</span>Healthcare / MedTech</li>
+                                <li><span class="sk-ck">✔</span>Education / EdTech</li>
+                                <li><span class="sk-ck">✔</span>E-commerce / Retail / B2C</li>
+                                <li><span class="sk-ck">✔</span>NGO &amp; Marketing / Advertising</li>
+                            </ul>
+                        </aside>
+                    </main>
                 </div>
+                <p class="text-center text-xs font-mono text-muted mt-3">Hover or tap to scroll, drag, or use arrow keys.</p>
             </div>
         </div>
     </section>
@@ -1320,90 +1536,246 @@ app.<span class="text-pink-400">use</span>((req, res, next) => {
         }, { threshold: 0.15 });
         revealEls.forEach(el => io.observe(el));
 
-        // ================= CONCEPT LAB — FIZZ (soda) =================
+        // ================= SKILLS — CAPABILITY REGISTRY (marbled deck) =================
         (function () {
-            const stage = document.getElementById('soda-stage');
-            const can = document.getElementById('soda-can');
-            const subLabel = document.getElementById('soda-can-sub');
-            const berriesWrap = document.getElementById('soda-berries');
-            const bubblesWrap = document.getElementById('soda-bubbles');
-            const cards = stage ? stage.querySelectorAll('.soda-card') : [];
-            if (!stage || !can || !berriesWrap || !bubblesWrap) return;
+            const skApp = document.getElementById('sk-app');
+            const skLeft = document.getElementById('sk-left');
+            const skStrip = document.getElementById('sk-strip');
+            const skDeckEl = document.getElementById('sk-deck');
+            const skRail = document.getElementById('sk-rail');
+            const skThumb = document.getElementById('sk-thumb');
+            if (!skApp || !skLeft || !skStrip || !skDeckEl || !skRail || !skThumb) return;
 
-            const hasGsap = typeof gsap !== 'undefined';
-            const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+            const OFFERINGS = [
+                { pill: 'Adobe Illustrator', icon: '\u270F', pal: ['#241f33', '#f0a63a', '#5a4fcf'], ang: 116 },
+                { pill: 'Adobe Photoshop', icon: '\u25D0', pal: ['#1e2a4a', '#3f8fd8', '#b8c8ee'], ang: 98 },
+                { pill: 'Canva', icon: '\u2740', pal: ['#232a4a', '#38b6c9', '#8f6fe8'], ang: 134 },
+                { pill: 'Figma', icon: '\u25C7', pal: ['#251f38', '#a259ff', '#f24e1e'], ang: 104 },
+                { pill: 'Google Ads', icon: '\u2197', pal: ['#1d2733', '#4a90e2', '#7ac74f'], ang: 126 },
+                { pill: 'GA4', icon: '\u25C9', pal: ['#20242e', '#f9ab00', '#4a90e2'], ang: 94 },
+                { pill: 'Meta Ads Manager', icon: '\u221E', pal: ['#182a52', '#3f7de8', '#38bdf8'], ang: 142 },
+                { pill: 'SEMrush / Ahrefs', icon: '\u2317', pal: ['#232722', '#e8a13f', '#3fae7a'], ang: 112 },
+                { pill: 'WordPress Expert', icon: '\u2756', pal: ['#22303c', '#3f7ea8', '#e8c06b'], ang: 120 },
+                { pill: 'Git / GitHub', icon: '\u2442', pal: ['#1d2129', '#e8703a', '#5a6b8a'], ang: 108 },
+                { pill: 'HTML / CSS', icon: '\u2039\u203A', pal: ['#26222b', '#e85d3a', '#3f7ea8'], ang: 128 },
+                { pill: 'PHP / WordPress API', icon: '\u2699', pal: ['#242a3d', '#777bb4', '#4a90e2'], ang: 97 },
+                { pill: 'JavaScript', icon: '\u2261', pal: ['#2b2a24', '#f0c33f', '#5a6bbd'], ang: 136 },
+                { pill: 'Node.js', icon: '\u2B22', pal: ['#1f2a24', '#539e43', '#c9d98a'], ang: 102 },
+                { pill: 'React / Next.js 15', icon: '\u2733', pal: ['#20242b', '#61dafb', '#e8e8f0'], ang: 118 },
+                { pill: 'SQL', icon: '\u2630', pal: ['#232833', '#5a7ea8', '#c96b4a'], ang: 122 },
+            ];
+            const GROUPS = ['DESIGN & MARKETING', 'ENGINEERING'];
+            const groupOf = i => (i < 9 ? 0 : 1);
 
-            // --- Build scattered berries -----------------------------------
-            const berryCount = 7;
-            const berries = [];
-            for (let i = 0; i < berryCount; i++) {
-                const el = document.createElement('div');
-                el.className = 'soda-berry';
-                el.innerHTML = '<span class="cherry-leaf"></span><span class="cherry-body"></span>';
-                const size = 22 + Math.random() * 28;
-                el.style.width = size + 'px';
-                el.style.height = size + 'px';
-                el.style.top = (10 + Math.random() * 68) + '%';
-                el.style.left = (8 + Math.random() * 78) + '%';
-                berriesWrap.appendChild(el);
-                berries.push({ el, rx: 0, ry: 0, baseX: 0, baseY: 0, angle: Math.random() * 360, dur: 5 + Math.random() * 6, ph: Math.random() * 10 });
+            const clamp = (v, a, b) => Math.min(b, Math.max(a, v));
+            const N = OFFERINGS.length, PAD = 7, REPEATS = 3, TOTAL = REPEATS * N;
+
+            // ---- Build card deck ----
+            const cards = OFFERINGS.map((o, i) => {
+                const g = GROUPS[groupOf(i)];
+                const nn = String(i + 1).padStart(2, '0');
+                const el = document.createElement('article');
+                el.className = 'sk-card';
+                const bg = `radial-gradient(85% 65% at 68% 28%, rgba(255,255,255,.10), rgba(255,255,255,0) 62%),` +
+                    `repeating-linear-gradient(${o.ang}deg, ${o.pal[0]} 0 26px, ${o.pal[1]} 26px 58px, ${o.pal[0]} 58px 86px,` +
+                    `${o.pal[2]} 86px 122px, ${o.pal[1]} 122px 152px, ${o.pal[0]} 152px 196px, ${o.pal[2]} 196px 232px)`;
+                el.innerHTML =
+                    `<div class="sk-marble" style="background:${bg};filter:url(#skm${i % 6}) saturate(1.12) contrast(1.08)"></div>` +
+                    `<div class="sk-gloss"></div>` +
+                    `<div class="sk-ct"><span class="sk-cstar">${o.icon}</span><span>CAPABILITY_${nn} // ${g}</span></div>` +
+                    `<div class="sk-badge"><span class="sk-bic">${o.icon}</span><span>${o.pill}</span></div>`;
+                skDeckEl.appendChild(el);
+                return el;
+            });
+
+            // ---- Build pill strip (pre-wrapped: pill slot -> offering index) ----
+            for (let s = 0; s < TOTAL; s++) {
+                const oi = ((s - PAD) % N + N) % N;
+                const o = OFFERINGS[oi];
+                const b = document.createElement('button');
+                b.type = 'button'; b.className = 'sk-pill';
+                b.dataset.o = oi;
+                b.innerHTML = `<span class="sk-ic">${o.icon}</span><span>${o.pill}</span>`;
+                skStrip.appendChild(b);
+            }
+            const pills = Array.from(skStrip.children);
+
+            // ---- State ----
+            let target = 0, current = 0, curIdx = -1;
+            let lastInput = performance.now();
+            let drag = null, railDrag = false, suppressClickUntil = 0;
+            let slotC = 0, railH = 200;
+            let stride = 59, halfPill = 22;
+            const samples = [];
+            let hovering = false;
+
+            function measure() {
+                slotC = Math.round(skLeft.clientHeight * 0.42);
+                if (pills.length > 1) {
+                    const st = pills[1].offsetTop - pills[0].offsetTop;
+                    if (st > 0) stride = st;
+                    const hp = pills[0].offsetHeight / 2;
+                    if (hp > 0) halfPill = hp;
+                }
+                railH = skRail.getBoundingClientRect().height;
+            }
+            measure();
+            window.addEventListener('resize', measure);
+            window.addEventListener('load', measure);
+            if (document.fonts && document.fonts.ready) document.fonts.ready.then(measure);
+
+            function pose(d, i) {
+                if (d === 0) { const r = ((i * 7) % 3 - 1) * 1.8; return { t: `translate(-50%,-50%) rotate(${r}deg)`, o: 1, z: 60 }; }
+                if (d === 1) return { t: 'translate(-50%,-50%) translate(-9%,-5.5%) rotate(5.5deg) scale(.962)', o: 1, z: 50 };
+                if (d === 2) return { t: 'translate(-50%,-50%) translate(-17%,-10%) rotate(9.5deg) scale(.925)', o: 1, z: 40 };
+                if (d === 3) return { t: 'translate(-50%,-50%) translate(-24%,-14%) rotate(12.5deg) scale(.89)', o: 1, z: 30 };
+                return { t: 'translate(-50%,-50%) translate(-135%,7%) rotate(-16deg) scale(.86)', o: 0, z: 5 };
+            }
+            function applyDeck(idx) {
+                cards.forEach((c, i) => {
+                    const d = (i - idx + N) % N, P = pose(d, i);
+                    c.style.zIndex = P.z; c.style.opacity = P.o; c.style.transform = P.t;
+                    c.classList.toggle('sk-far', d > 3 && d < N - 1);
+                });
+                pills.forEach(p => p.classList.remove('active'));
+                const ap = pills[PAD + idx];
+                if (ap) ap.classList.add('active');
             }
 
-            // --- Cursor tracking: can tilt + berry repulsion origin ---------
-            let mousePX = null, mousePY = null;
-            let targetRx = 0, targetRy = 0, curRx = 0, curRy = 0;
-            let extraSpin = 0;
-
-            stage.addEventListener('mousemove', e => {
-                mousePX = e.clientX; mousePY = e.clientY;
-                const rect = stage.getBoundingClientRect();
-                const nx = (e.clientX - rect.left) / rect.width - 0.5;
-                const ny = (e.clientY - rect.top) / rect.height - 0.5;
-                targetRy = nx * 40;
-                targetRx = -ny * 24;
-            });
-            stage.addEventListener('mouseleave', () => { mousePX = null; mousePY = null; targetRx = 0; targetRy = 0; });
-
-            let switching = false;
-
-            function tick(ts) {
-                curRx += (targetRx - curRx) * 0.08;
-                curRy += (targetRy - curRy) * 0.08;
-                can.style.setProperty('--rx', curRx.toFixed(2) + 'deg');
-                can.style.setProperty('--ry', (curRy + extraSpin).toFixed(2) + 'deg');
-
-                if (!switching) {
-                    const time = (ts || 0) / 1000;
-                    berries.forEach((b, i) => {
-                        const rect = b.el.getBoundingClientRect();
-                        const bx = rect.left + rect.width / 2;
-                        const by = rect.top + rect.height / 2;
-                        let tRx = 0, tRy = 0, speedMult = 1;
-                        if (mousePX !== null) {
-                            const dx = mousePX - bx, dy = mousePY - by;
-                            const dist = Math.sqrt(dx * dx + dy * dy) || 1;
-                            if (dist < 220) {
-                                const force = (220 - dist) / 220;
-                                tRx = (dx / dist) * force * -70;
-                                tRy = (dy / dist) * force * -70;
-                                speedMult = 1 + force * 4;
-                            }
-                        }
-                        b.rx += (tRx - b.rx) * 0.1;
-                        b.ry += (tRy - b.ry) * 0.1;
-                        b.angle += 0.15 * speedMult;
-                        const phase = (time + i * 0.6) * (Math.PI * 2 / b.dur);
-                        const floatY = Math.sin(phase) * 10;
-                        const floatAngle = Math.cos(phase) * 8;
-                        b.el.style.transform = `translate(${(b.rx + b.baseX).toFixed(1)}px, ${(b.ry + b.baseY + floatY).toFixed(1)}px) rotate(${(b.angle + floatAngle).toFixed(1)}deg)`;
-                    });
+            function tick() {
+                const now = performance.now();
+                if (!drag && !railDrag && now - lastInput > 160) {
+                    const r = Math.round(target);
+                    if (r !== target) target = r;
                 }
-                if (!reduceMotion) requestAnimationFrame(tick);
+                current += (target - current) * 0.16;
+                if (Math.abs(target - current) < 0.0004) current = target;
+
+                skStrip.style.transform = `translate3d(0,${(slotC - halfPill - (PAD + current) * stride).toFixed(2)}px,0)`;
+
+                const off = PAD + current;
+                for (let s = 0; s < pills.length; s++) {
+                    const d = Math.abs(s - off);
+                    let o = d < 0.5 ? 1 : 1 - Math.min(0.62, d * 0.038);
+                    if (o < 0.3) o = 0.3;
+                    pills[s].style.opacity = (o >= 1 ? '1' : o.toFixed(3));
+                }
+
+                const idx = clamp(Math.round(current), 0, N - 1);
+                if (idx !== curIdx) { curIdx = idx; applyDeck(idx); }
+
+                skThumb.style.top = (clamp(current / (N - 1), 0, 1) * Math.max(0, railH - 64)) + 'px';
+                requestAnimationFrame(tick);
             }
             requestAnimationFrame(tick);
-            if (reduceMotion) tick(0); // render one static frame
+            requestAnimationFrame(() => requestAnimationFrame(() => skDeckEl.classList.add('ready')));
 
-            // --- Rising bubbles ------------------------------------------------
+            // ---- Wheel: scoped to the widget itself, never the window ----
+            skApp.addEventListener('wheel', e => {
+                e.preventDefault();
+                const dy = e.deltaY * (e.deltaMode === 1 ? 33 : e.deltaMode === 2 ? window.innerHeight : 1);
+                target = clamp(target + dy * 0.006, 0, N - 1);
+                lastInput = performance.now();
+            }, { passive: false });
+
+            // ---- Keyboard: only while hovering or focused on the widget ----
+            skApp.addEventListener('mouseenter', () => { hovering = true; });
+            skApp.addEventListener('mouseleave', () => { hovering = false; });
+            skApp.addEventListener('focus', () => { hovering = true; });
+            skApp.addEventListener('blur', () => { hovering = false; });
+            window.addEventListener('keydown', e => {
+                if (!hovering) return;
+                const k = e.key; let h = true;
+                if (k === 'ArrowDown' || k === 'ArrowRight' || k === 'PageDown' || k === ' ') target = clamp(Math.round(target) + 1, 0, N - 1);
+                else if (k === 'ArrowUp' || k === 'ArrowLeft' || k === 'PageUp') target = clamp(Math.round(target) - 1, 0, N - 1);
+                else if (k === 'Home') target = 0;
+                else if (k === 'End') target = N - 1;
+                else h = false;
+                if (h) { e.preventDefault(); lastInput = performance.now(); }
+            });
+
+            // ---- Drag / flick / click on deck ----
+            skApp.addEventListener('pointerdown', e => {
+                if (e.target.closest('.sk-rail')) return;
+                drag = { x: e.clientX, y: e.clientY, t: performance.now(), target: target, moved: 0 };
+                samples.length = 0;
+                samples.push({ t: drag.t, y: e.clientY, x: e.clientX });
+                skApp.classList.add('sk-grabbing');
+            });
+            window.addEventListener('pointermove', e => {
+                if (railDrag) { moveRail(e); return; }
+                if (!drag) return;
+                const dx = drag.x - e.clientX, dy = drag.y - e.clientY;
+                drag.moved = Math.max(drag.moved, Math.hypot(e.clientX - drag.x, e.clientY - drag.y));
+                if (drag.moved > 6) suppressClickUntil = performance.now() + 400;
+                target = clamp(drag.target + (dy + dx * 0.7) / 150, 0, N - 1);
+                lastInput = performance.now();
+                const now = performance.now();
+                samples.push({ t: now, y: e.clientY, x: e.clientX });
+                while (samples.length > 2 && now - samples[0].t > 90) samples.shift();
+            });
+            function endDrag(e) {
+                if (railDrag) { railDrag = false; lastInput = performance.now(); return; }
+                if (!drag) return;
+                const now = performance.now();
+                if (drag.moved <= 6 && now - drag.t < 400) {
+                    if (!e.target.closest('.sk-pill')) {
+                        target = clamp(Math.round(target) + 1, 0, N - 1);
+                        lastInput = now;
+                    }
+                } else {
+                    let v = 0;
+                    if (samples.length >= 2) {
+                        const a = samples[0], b = samples[samples.length - 1];
+                        const dt = Math.max(1, b.t - a.t);
+                        v = ((a.y - b.y) / dt) + ((a.x - b.x) / dt) * 0.7;
+                    }
+                    target = clamp(Math.round(target + clamp(v * 160 / 150, -2.5, 2.5)), 0, N - 1);
+                    lastInput = now;
+                }
+                drag = null;
+                skApp.classList.remove('sk-grabbing');
+            }
+            window.addEventListener('pointerup', endDrag);
+            window.addEventListener('pointercancel', () => { drag = null; railDrag = false; skApp.classList.remove('sk-grabbing'); });
+
+            // ---- Pill click: jump to the offering the pill shows ----
+            skStrip.addEventListener('click', e => {
+                if (performance.now() < suppressClickUntil) return;
+                const p = e.target.closest('.sk-pill');
+                if (!p) return;
+                target = clamp(+p.dataset.o, 0, N - 1);
+                lastInput = performance.now();
+            });
+
+            // ---- Progress rail ----
+            function moveRail(e) {
+                const r = skRail.getBoundingClientRect();
+                const frac = clamp((e.clientY - r.top - 32) / Math.max(1, r.height - 64), 0, 1);
+                target = frac * (N - 1);
+                lastInput = performance.now();
+            }
+            skRail.addEventListener('pointerdown', e => {
+                e.preventDefault();
+                railDrag = true; moveRail(e);
+            });
+        })();
+
+
+        // ================= CONCEPT LAB — FIZZ (real WebGL 3D) =================
+        (function () {
+            const stageEl = document.getElementById('soda-stage');
+            const mount = document.getElementById('fizz-gl');
+            const loadingEl = document.getElementById('fizz-loading');
+            const bubblesWrap = document.getElementById('soda-bubbles');
+            const cards = stageEl ? stageEl.querySelectorAll('.soda-card') : [];
+            if (!stageEl || !mount || !bubblesWrap) return;
+
+            const hasThree = typeof THREE !== 'undefined';
+            const hasGsap = typeof gsap !== 'undefined';
+            const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+            // --- Rising bubbles (kept lightweight/CSS — decorative, not the 3D focus) ---
             function spawnBubble() {
                 const b = document.createElement('div');
                 b.className = 'soda-bubble';
@@ -1416,77 +1788,1019 @@ app.<span class="text-pink-400">use</span>((req, res, next) => {
                 bubblesWrap.appendChild(b);
                 setTimeout(() => b.remove(), dur * 1000 + 100);
             }
-            if (!reduceMotion) setInterval(spawnBubble, 450);
+            if (!reducedMotion) setInterval(spawnBubble, 450);
 
-            // --- Flavor switch: color morph + can spin + berry implode/explode -
-            function switchFlavor(flavor) {
-                if (switching) return;
-                switching = true;
-                const toZero = flavor === 'zero';
-                const target = toZero
-                    ? { inner: '#0b4f8a', mid: '#04294e', outer: '#010c14' }
-                    : { inner: '#0b8a78', mid: '#044e3b', outer: '#011411' };
+            if (!hasThree) {
+                if (loadingEl) loadingEl.textContent = '3D unavailable — check your connection';
+                return;
+            }
 
-                if (hasGsap) {
-                    gsap.to(stage, { '--soda-inner': target.inner, '--soda-mid': target.mid, '--soda-outer': target.outer, duration: 1.5, ease: 'power2.inOut' });
+            const THEME = {
+                classic: { inner: '#0b8a78', mid: '#044e3b', outer: '#011411', light: 0x22d3ee, berry: 0xff5566, berryEmissive: 0x7a1520, label: 'CLASSIC', bodyGrad: ['#0d5c4c', '#12a389', '#062a23'] },
+                zero: { inner: '#0b4f8a', mid: '#04294e', outer: '#010c14', light: 0x4f8cff, berry: 0x9be15d, berryEmissive: 0x2f7a1f, label: 'ZERO LIME', bodyGrad: ['#0d3f5c', '#1288c9', '#051b26'] },
+            };
 
-                    const spin = { val: 0, blur: 0 };
-                    gsap.to(spin, {
-                        val: 360, blur: 10, duration: 0.6, ease: 'power2.in',
-                        onUpdate: () => { extraSpin = spin.val; can.style.filter = `blur(${spin.blur}px)`; },
-                        onComplete: () => {
-                            can.classList.toggle('zero-theme', toZero);
-                            subLabel.textContent = toZero ? 'Zero Lime' : 'Classic';
-                            gsap.to(spin, {
-                                val: 720, blur: 0, duration: 1.2, ease: 'back.out(1.7)',
-                                onUpdate: () => { extraSpin = spin.val; can.style.filter = `blur(${spin.blur}px)`; },
-                                onComplete: () => { extraSpin = 0; can.style.filter = 'none'; }
-                            });
+            function ready() {
+                const w = () => Math.max(1, mount.clientWidth);
+                const h = () => Math.max(1, mount.clientHeight);
+
+                const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+                renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+                renderer.setSize(w(), h());
+                renderer.domElement.style.display = 'block';
+                renderer.domElement.style.width = '100%';
+                renderer.domElement.style.height = '100%';
+                mount.appendChild(renderer.domElement);
+
+                const scene = new THREE.Scene();
+                const camera = new THREE.PerspectiveCamera(38, w() / h(), 0.1, 100);
+                camera.position.set(0, 0, 6.4);
+
+                scene.add(new THREE.AmbientLight(0xffffff, 0.5));
+                const key = new THREE.PointLight(THEME.classic.light, 1.5, 20, 2);
+                key.position.set(2.6, 3, 4);
+                scene.add(key);
+                const rim = new THREE.PointLight(0xffffff, 0.9, 20, 2);
+                rim.position.set(-3, -1, 3.5);
+                scene.add(rim);
+                const fill = new THREE.PointLight(0xf472b6, 0.45, 20, 2);
+                fill.position.set(0, -3, 2);
+                scene.add(fill);
+
+                // ---- Label texture (drawn on a 2D canvas, wrapped onto the cylinder) ----
+                function makeLabelTexture(theme) {
+                    const t = THEME[theme];
+                    const c = document.createElement('canvas');
+                    c.width = 512; c.height = 1024;
+                    const ctx = c.getContext('2d');
+                    const grad = ctx.createLinearGradient(0, 0, 512, 1024);
+                    grad.addColorStop(0, t.bodyGrad[0]);
+                    grad.addColorStop(0.5, t.bodyGrad[1]);
+                    grad.addColorStop(1, t.bodyGrad[2]);
+                    ctx.fillStyle = grad;
+                    ctx.fillRect(0, 0, 512, 1024);
+                    const shine = ctx.createLinearGradient(60, 0, 190, 0);
+                    shine.addColorStop(0, 'rgba(255,255,255,0)');
+                    shine.addColorStop(0.5, 'rgba(255,255,255,0.32)');
+                    shine.addColorStop(1, 'rgba(255,255,255,0)');
+                    ctx.fillStyle = shine;
+                    ctx.fillRect(30, 0, 200, 1024);
+                    ctx.textAlign = 'center';
+                    ctx.fillStyle = '#ffffff';
+                    ctx.font = "700 130px Galada, cursive";
+                    ctx.fillText('Fizz', 256, 470);
+                    ctx.font = "600 38px 'JetBrains Mono', monospace";
+                    ctx.fillStyle = 'rgba(255,255,255,0.92)';
+                    ctx.fillText(t.label, 256, 545);
+                    const tex = new THREE.CanvasTexture(c);
+                    tex.needsUpdate = true;
+                    return tex;
+                }
+
+                const labelClassic = makeLabelTexture('classic');
+                const labelZero = makeLabelTexture('zero');
+
+                // ---- Can (group: body cylinder + metal rims + top cap) ----
+                const canGroup = new THREE.Group();
+                const bodyGeo = new THREE.CylinderGeometry(1.0, 1.0, 2.6, 48, 1, true);
+                const bodyMat = new THREE.MeshStandardMaterial({ map: labelClassic, metalness: 0.25, roughness: 0.42, side: THREE.DoubleSide });
+                const body = new THREE.Mesh(bodyGeo, bodyMat);
+                canGroup.add(body);
+
+                const rimMat = new THREE.MeshStandardMaterial({ color: 0xd8d8d8, metalness: 0.9, roughness: 0.25 });
+                const rimGeo = new THREE.CylinderGeometry(1.02, 1.0, 0.14, 48);
+                const topRim = new THREE.Mesh(rimGeo, rimMat);
+                topRim.position.y = 1.33;
+                canGroup.add(topRim);
+                const bottomRim = new THREE.Mesh(rimGeo.clone(), rimMat);
+                bottomRim.position.y = -1.33;
+                canGroup.add(bottomRim);
+
+                const capGeo = new THREE.CircleGeometry(1.0, 48);
+                const capMat = new THREE.MeshStandardMaterial({ color: 0xcfcfcf, metalness: 0.85, roughness: 0.3, side: THREE.DoubleSide });
+                const topCap = new THREE.Mesh(capGeo, capMat);
+                topCap.rotation.x = -Math.PI / 2;
+                topCap.position.y = 1.4;
+                canGroup.add(topCap);
+
+                scene.add(canGroup);
+
+                // ---- Berries (sphere + stem groups, scattered in 3D) ----
+                function makeBerry(theme) {
+                    const t = THEME[theme];
+                    const group = new THREE.Group();
+                    const bodyGeo = new THREE.SphereGeometry(0.22, 20, 16);
+                    const bodyMat = new THREE.MeshStandardMaterial({ color: t.berry, metalness: 0.15, roughness: 0.3, emissive: t.berryEmissive, emissiveIntensity: 0.18 });
+                    group.add(new THREE.Mesh(bodyGeo, bodyMat));
+                    const stemMat = new THREE.MeshStandardMaterial({ color: 0x2f9e44, roughness: 0.6 });
+                    const stem = new THREE.Mesh(new THREE.CylinderGeometry(0.02, 0.025, 0.3, 6), stemMat);
+                    stem.position.set(0.05, 0.28, 0);
+                    stem.rotation.z = -0.35;
+                    group.add(stem);
+                    return group;
+                }
+
+                const berryCount = 7;
+                const berries = [];
+                for (let i = 0; i < berryCount; i++) {
+                    const mesh = makeBerry('classic');
+                    const angle = Math.random() * Math.PI * 2;
+                    const radius = 2.0 + Math.random() * 1.3;
+                    const baseX = Math.cos(angle) * radius;
+                    const baseY = (Math.random() - 0.5) * 2.6;
+                    const baseZ = Math.sin(angle) * radius * 0.6 - 0.4;
+                    mesh.position.set(baseX, baseY, baseZ);
+                    const scale = 0.7 + Math.random() * 0.55;
+                    mesh.scale.setScalar(scale);
+                    scene.add(mesh);
+                    berries.push({ mesh, baseX, baseY, baseZ, scale, phase: Math.random() * 10, speed: 0.4 + Math.random() * 0.4, offsetX: 0, offsetY: 0 });
+                }
+
+                // ---- Cursor tracking (raycast onto a plane through the can) ----
+                const raycaster = new THREE.Raycaster();
+                const ndc = new THREE.Vector2();
+                const plane = new THREE.Plane(new THREE.Vector3(0, 0, 1), 0);
+                const planeHit = new THREE.Vector3();
+                let hasPointer = false;
+
+                mount.addEventListener('pointermove', (e) => {
+                    const rect = mount.getBoundingClientRect();
+                    ndc.x = ((e.clientX - rect.left) / rect.width) * 2 - 1;
+                    ndc.y = -(((e.clientY - rect.top) / rect.height) * 2 - 1);
+                    hasPointer = true;
+                });
+                mount.addEventListener('pointerleave', () => { hasPointer = false; });
+                mount.addEventListener('touchmove', (e) => {
+                    if (!e.touches || !e.touches[0]) return;
+                    const rect = mount.getBoundingClientRect();
+                    ndc.x = ((e.touches[0].clientX - rect.left) / rect.width) * 2 - 1;
+                    ndc.y = -(((e.touches[0].clientY - rect.top) / rect.height) * 2 - 1);
+                    hasPointer = true;
+                }, { passive: true });
+
+                // ---- Flavor switching (GSAP choreography, mirrors the original brief) ----
+                let switching = false;
+                let extraSpin = 0;
+
+                function switchFlavor(flavor) {
+                    if (switching) return;
+                    switching = true;
+                    const toZero = flavor === 'zero';
+                    const target = THEME[toZero ? 'zero' : 'classic'];
+
+                    const applySwap = () => {
+                        body.material.map = toZero ? labelZero : labelClassic;
+                        body.material.needsUpdate = true;
+                        key.color.set(target.light);
+                        berries.forEach(b => {
+                            const mat = b.mesh.children[0].material;
+                            mat.color.set(target.berry);
+                            mat.emissive.set(target.berryEmissive);
+                        });
+                    };
+
+                    if (hasGsap) {
+                        gsap.to(stageEl, { '--soda-inner': target.inner, '--soda-mid': target.mid, '--soda-outer': target.outer, duration: 1.5, ease: 'power2.inOut' });
+
+                        const spin = { val: 0 };
+                        gsap.to(spin, {
+                            val: Math.PI * 4, duration: 1.4, ease: 'power3.inOut',
+                            onUpdate: () => { extraSpin = spin.val; },
+                            onComplete: () => { extraSpin = 0; },
+                        });
+                        gsap.delayedCall(0.65, applySwap);
+
+                        let completed = 0;
+                        berries.forEach(b => {
+                            const tl = gsap.timeline();
+                            tl.to(b.mesh.position, { x: 0, y: 0, z: 0.4, duration: 0.5, ease: 'power2.in' })
+                              .to(b.mesh.scale, { x: 0.08, y: 0.08, z: 0.08, duration: 0.5, ease: 'power2.in' }, '<')
+                              .to({}, { duration: 0.2 })
+                              .to(b.mesh.scale, { x: b.scale, y: b.scale, z: b.scale, duration: 0.85, ease: 'back.out(1.6)' })
+                              .to(b.mesh.position, {
+                                  x: (Math.random() - 0.5) * 4.4, y: (Math.random() - 0.5) * 2.7, z: (Math.random() - 0.5) * 1.6 - 0.4,
+                                  duration: 0.85, ease: 'back.out(1.4)',
+                                  onComplete: () => {
+                                      b.baseX = b.mesh.position.x; b.baseY = b.mesh.position.y; b.baseZ = b.mesh.position.z;
+                                      b.offsetX = 0; b.offsetY = 0;
+                                      completed++;
+                                      if (completed === berries.length) switching = false;
+                                  },
+                              }, '<');
+                        });
+                    } else {
+                        stageEl.style.setProperty('--soda-inner', target.inner);
+                        stageEl.style.setProperty('--soda-mid', target.mid);
+                        stageEl.style.setProperty('--soda-outer', target.outer);
+                        applySwap();
+                        switching = false;
+                    }
+                }
+
+                cards.forEach(card => {
+                    card.addEventListener('click', () => {
+                        if (switching) return;
+                        cards.forEach(c => c.classList.remove('active'));
+                        card.classList.add('active');
+                        switchFlavor(card.dataset.flavor);
+                    });
+                });
+
+                // ---- Animate ----
+                let curTiltX = 0, curTiltY = 0;
+                const clock = { start: performance.now() };
+
+                function animate() {
+                    requestAnimationFrame(animate);
+                    const elapsed = (performance.now() - clock.start) / 1000;
+
+                    let targetTiltX = 0, targetTiltY = 0;
+                    if (hasPointer) {
+                        raycaster.setFromCamera(ndc, camera);
+                        raycaster.ray.intersectPlane(plane, planeHit);
+                        if (planeHit) {
+                            targetTiltY = Math.max(-0.6, Math.min(0.6, planeHit.x * 0.32));
+                            targetTiltX = Math.max(-0.4, Math.min(0.4, -planeHit.y * 0.22));
+                        }
+                    }
+                    curTiltX += (targetTiltX - curTiltX) * 0.08;
+                    curTiltY += (targetTiltY - curTiltY) * 0.08;
+
+                    const bob = reducedMotion ? 0 : Math.sin(elapsed * 0.9) * 0.08;
+                    const idleSway = reducedMotion ? 0 : Math.sin(elapsed * 0.15) * 0.05;
+                    canGroup.rotation.x = curTiltX;
+                    canGroup.rotation.y = curTiltY + idleSway + extraSpin;
+                    canGroup.position.y = bob;
+
+                    berries.forEach((b, i) => {
+                        let tRepX = 0, tRepY = 0;
+                        if (hasPointer && planeHit && !switching) {
+                            const dx = b.mesh.position.x - planeHit.x;
+                            const dy = b.mesh.position.y - planeHit.y;
+                            const dist = Math.sqrt(dx * dx + dy * dy) || 1;
+                            const threshold = 1.5;
+                            if (dist < threshold) {
+                                const force = (threshold - dist) / threshold;
+                                tRepX = (dx / dist) * force * 0.9;
+                                tRepY = (dy / dist) * force * 0.9;
+                            }
+                        }
+                        b.offsetX += (tRepX - b.offsetX) * 0.12;
+                        b.offsetY += (tRepY - b.offsetY) * 0.12;
+                        if (!switching) {
+                            const floatY = reducedMotion ? 0 : Math.sin(elapsed * b.speed + b.phase) * 0.15;
+                            b.mesh.position.x = b.baseX + b.offsetX;
+                            b.mesh.position.y = b.baseY + b.offsetY + floatY;
+                            if (!reducedMotion) { b.mesh.rotation.y += 0.01; b.mesh.rotation.x += 0.006; }
                         }
                     });
 
-                    let completed = 0;
-                    berries.forEach(b => {
-                        gsap.set(b.el, { x: b.rx + b.baseX, y: b.ry + b.baseY, rotation: b.angle });
-                        const nextX = (Math.random() - 0.5) * Math.min(300, stage.clientWidth * 0.55);
-                        const nextY = (Math.random() - 0.5) * Math.min(180, stage.clientHeight * 0.45);
-                        const tl = gsap.timeline();
-                        tl.to(b.el, {
-                            x: 0, y: 0, rotation: '+=45', scale: 0.15, opacity: 0, duration: 0.5, ease: 'power2.in',
-                            onComplete: () => { b.el.classList.toggle('zero', toZero); }
-                        })
-                        .to(b.el, { duration: 0.25 })
-                        .to(b.el, {
-                            x: nextX, y: nextY, rotation: '+=45', scale: 1, opacity: 1, duration: 0.9, ease: 'back.out(1.5)',
-                            onComplete: () => {
-                                b.baseX = nextX; b.baseY = nextY; b.rx = 0; b.ry = 0;
-                                b.el.style.transform = '';
-                                completed++;
-                                if (completed === berries.length) switching = false;
-                            }
-                        });
+                    renderer.render(scene, camera);
+                }
+
+                function resize() {
+                    const ww = w(), hh = h();
+                    camera.aspect = ww / hh;
+                    camera.updateProjectionMatrix();
+                    renderer.setSize(ww, hh, false);
+                }
+                window.addEventListener('resize', resize);
+
+                animate();
+                if (loadingEl) loadingEl.classList.add('is-hidden');
+            }
+
+            if (document.fonts && document.fonts.ready) {
+                document.fonts.ready.then(ready).catch(ready);
+            } else {
+                ready();
+            }
+        })();
+
+        (function () {
+            const canvas = document.getElementById('pulse-canvas');
+            const root = document.getElementById('pulse-root');
+            const stageEl = canvas ? canvas.closest('.pulse-stage') : null;
+            if (!canvas || !root || !stageEl) return;
+
+            const COLS = 22, ROWS = 22, PARTICLE_CAP = 140;
+            const DIRS = { up: { x: 0, y: -1 }, down: { x: 0, y: 1 }, left: { x: -1, y: 0 }, right: { x: 1, y: 0 } };
+            const SPEED_MS = { chill: 145, classic: 105, turbo: 72 };
+            const COMBO_WINDOW = 3.2; // seconds to chain a combo
+            const SAVE_KEY = 'pulse-save-v1';
+
+            const same = (a, b) => a.x === b.x && a.y === b.y;
+            const opposite = (a, b) => a.x === -b.x && a.y === -b.y;
+            const cloneCells = cells => cells.map(c => ({ x: c.x, y: c.y }));
+            const randInt = n => Math.floor(Math.random() * n);
+            const wrapv = (v, max) => ((v % max) + max) % max;
+            const clamp = (v, mn, mx) => Math.max(mn, Math.min(mx, v));
+            const lerp = (a, b, t) => a + (b - a) * t;
+
+            function hexToRgb(hex) {
+                const h = hex.replace('#', '');
+                return [parseInt(h.slice(0, 2), 16), parseInt(h.slice(2, 4), 16), parseInt(h.slice(4, 6), 16)];
+            }
+            function lerpColor(a, b, t) {
+                const pa = hexToRgb(a), pb = hexToRgb(b);
+                const r = Math.round(pa[0] + (pb[0] - pa[0]) * t);
+                const g = Math.round(pa[1] + (pb[1] - pa[1]) * t);
+                const bl = Math.round(pa[2] + (pb[2] - pa[2]) * t);
+                return `rgb(${r},${g},${bl})`;
+            }
+
+            // Combo tier colors: cool cyan -> hot amber as the streak climbs
+            const TIER_COLORS = ['#22d3ee', '#4f8cff', '#a78bfa', '#f472b6', '#f59e0b'];
+            function tierFor(combo) { return clamp(Math.floor((combo - 1) / 2), 0, TIER_COLORS.length - 1); }
+            function multiplierFor(combo) { return tierFor(combo) + 1; }
+
+            function loadSave() {
+                const defaults = { highScore: 0, wrap: false, speed: 'classic', muted: false, shake: true };
+                try {
+                    const raw = window.localStorage.getItem(SAVE_KEY);
+                    if (!raw) return { ...defaults };
+                    const p = JSON.parse(raw);
+                    return {
+                        highScore: typeof p.highScore === 'number' ? p.highScore : 0,
+                        wrap: Boolean(p.wrap),
+                        speed: ['chill', 'classic', 'turbo'].includes(p.speed) ? p.speed : 'classic',
+                        muted: Boolean(p.muted),
+                        shake: p.shake !== false,
+                    };
+                } catch (e) { return { ...defaults }; }
+            }
+            function writeSave(data) {
+                try { window.localStorage.setItem(SAVE_KEY, JSON.stringify(data)); } catch (e) {}
+            }
+
+            // ---------------- Procedural audio ----------------
+            function makeNoiseBuffer(ctx) {
+                const length = ctx.sampleRate * 0.3;
+                const buffer = ctx.createBuffer(1, length, ctx.sampleRate);
+                const data = buffer.getChannelData(0);
+                for (let i = 0; i < length; i++) data[i] = Math.random() * 2 - 1;
+                return buffer;
+            }
+            function createAudio() {
+                let ctx = null, master = null, sfx = null, noise = null, muted = false, lastTurn = 0;
+                function ensure() {
+                    if (ctx) return;
+                    const AC = window.AudioContext || window.webkitAudioContext;
+                    if (!AC) return;
+                    ctx = new AC({ latencyHint: 'interactive' });
+                    master = ctx.createGain(); sfx = ctx.createGain();
+                    sfx.gain.value = 0.7; master.gain.value = muted ? 0 : 0.85;
+                    sfx.connect(master); master.connect(ctx.destination);
+                    noise = makeNoiseBuffer(ctx);
+                }
+                function resume() { ensure(); if (ctx && ctx.state === 'suspended') void ctx.resume(); }
+                function beep(freq, dur, type, gain, when) {
+                    if (!ctx || !sfx || muted) return;
+                    when = when || 0;
+                    const t = ctx.currentTime + when;
+                    const osc = ctx.createOscillator(); const g = ctx.createGain();
+                    osc.type = type; osc.frequency.setValueAtTime(freq, t);
+                    g.gain.setValueAtTime(0.0001, t);
+                    g.gain.exponentialRampToValueAtTime(gain, t + 0.012);
+                    g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
+                    osc.connect(g); g.connect(sfx);
+                    osc.start(t); osc.stop(t + dur + 0.02);
+                    osc.onended = () => { osc.disconnect(); g.disconnect(); };
+                }
+                return {
+                    unlock() { resume(); },
+                    setMuted(next) { muted = next; if (master && ctx) master.gain.setTargetAtTime(next ? 0 : 0.85, ctx.currentTime, 0.03); },
+                    eat(tier) {
+                        resume();
+                        const base = 440 + tier * 70;
+                        beep(base, 0.085, 'triangle', 0.11);
+                        beep(base * 1.5, 0.11, 'sine', 0.055, 0.03);
+                    },
+                    comboUp(tier) {
+                        resume();
+                        beep(620 + tier * 90, 0.1, 'square', 0.05);
+                        beep(930 + tier * 90, 0.14, 'sine', 0.04, 0.04);
+                    },
+                    die() {
+                        resume();
+                        if (!ctx || !sfx || !noise || muted) return;
+                        const t = ctx.currentTime;
+                        beep(170, 0.2, 'sawtooth', 0.08);
+                        beep(85, 0.3, 'sine', 0.12, 0.03);
+                        const src = ctx.createBufferSource(); const g = ctx.createGain(); const filter = ctx.createBiquadFilter();
+                        src.buffer = noise; filter.type = 'lowpass';
+                        filter.frequency.setValueAtTime(1000, t);
+                        filter.frequency.exponentialRampToValueAtTime(110, t + 0.24);
+                        g.gain.setValueAtTime(0.16, t);
+                        g.gain.exponentialRampToValueAtTime(0.0001, t + 0.3);
+                        src.connect(filter); filter.connect(g); g.connect(sfx);
+                        src.start(t); src.stop(t + 0.32);
+                    },
+                    turn() {
+                        const now = performance.now();
+                        if (now - lastTurn < 40) return;
+                        lastTurn = now; resume();
+                        beep(880, 0.025, 'square', 0.018);
+                    },
+                    start() { resume(); beep(400, 0.09, 'triangle', 0.08); beep(600, 0.12, 'triangle', 0.07, 0.07); beep(900, 0.16, 'sine', 0.05, 0.14); },
+                };
+            }
+
+            class PulseGame {
+                constructor(canvas, onHud) {
+                    this.canvas = canvas;
+                    this.ctx = canvas.getContext('2d');
+                    this.onHud = onHud;
+                    this.raf = 0; this.last = 0;
+                    this.inputActive = false;
+                    this.save = loadSave();
+                    this.tickInterval = SPEED_MS[this.save.speed];
+                    this.tickProgress = 0; this.acc = 0;
+                    this.snake = []; this.prevSnake = []; this.dir = DIRS.right; this.queued = null;
+                    this.food = { x: 10, y: 10 };
+                    this.score = 0; this.grow = 0; this.phase = 'title';
+                    this.combo = 0; this.comboTimer = 0;
+                    this.trauma = 0; this.hitstop = 0;
+                    this.particles = []; this.floaters = [];
+                    this.dustClock = 0; this.time = 0;
+                    this.reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+                    this.swipe = null;
+                    this.audio = createAudio();
+                    this.unbind = [];
+                    this.onFlash = null;
+                    this.resetBoard(true);
+                    this.bind();
+                    this.resize();
+                    this.emitHud();
+                }
+                start() {
+                    this.last = performance.now();
+                    const loop = (now) => {
+                        this.raf = requestAnimationFrame(loop);
+                        let dt = (now - this.last) / 1000; this.last = now;
+                        if (dt > 0.1) dt = 0.1;
+                        this.update(dt); this.draw();
+                    };
+                    this.raf = requestAnimationFrame(loop);
+                }
+                play() {
+                    this.audio.unlock();
+                    this.resetBoard(false);
+                    this.phase = 'playing';
+                    this.audio.start();
+                    this.emitHud();
+                }
+                togglePause() {
+                    if (this.phase === 'playing') { this.phase = 'paused'; this.emitHud(); }
+                    else if (this.phase === 'paused') { this.phase = 'playing'; this.emitHud(); }
+                }
+                resume() { if (this.phase === 'paused') { this.phase = 'playing'; this.emitHud(); } }
+                steer(name) {
+                    const next = DIRS[name];
+                    const current = this.queued || this.dir;
+                    if (this.snake.length > 1 && opposite(current, next)) return;
+                    if (same(current, next)) return;
+                    this.queued = next;
+                    if (this.phase === 'playing') this.audio.turn();
+                }
+                setMuted(m) { this.save.muted = m; this.audio.setMuted(m); this.persist(); this.emitHud(); }
+                setShake(s) { this.save.shake = s; this.persist(); this.emitHud(); }
+                setWrap(w) { this.save.wrap = w; this.persist(); this.emitHud(); }
+                setSpeed(s) { this.save.speed = s; this.tickInterval = SPEED_MS[s]; this.persist(); this.emitHud(); }
+                snapshot() {
+                    return {
+                        score: this.score, highScore: this.save.highScore, phase: this.phase,
+                        combo: this.combo, multiplier: multiplierFor(Math.max(1, this.combo)),
+                        wrap: this.save.wrap, speed: this.save.speed, muted: this.save.muted, shake: this.save.shake,
+                    };
+                }
+                persist() { writeSave(this.save); }
+                emitHud() { this.onHud(this.snapshot()); }
+
+                bind() {
+                    const onKeyDown = (e) => {
+                        if (!this.inputActive) return;
+                        const gameKeys = new Set(['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'KeyW', 'KeyA', 'KeyS', 'KeyD', 'Space', 'Enter', 'KeyP', 'Escape', 'KeyM']);
+                        if (gameKeys.has(e.code)) e.preventDefault();
+                        this.audio.unlock();
+                        if (e.code === 'KeyM') this.setMuted(!this.save.muted);
+                        if (this.phase === 'title' && (e.code === 'Enter' || e.code === 'Space')) { this.play(); return; }
+                        if (this.phase === 'dead' && (e.code === 'Enter' || e.code === 'Space')) { this.play(); return; }
+                        if ((e.code === 'KeyP' || e.code === 'Escape') && (this.phase === 'playing' || this.phase === 'paused')) { this.togglePause(); return; }
+                        this.readSteerFromCode(e.code);
+                    };
+                    const onBlur = () => {};
+                    const onVis = () => { if (!document.hidden) this.audio.unlock(); };
+                    const onResize = () => this.resize();
+
+                    const onPointerDown = (e) => {
+                        this.audio.unlock();
+                        if (e.pointerType === 'mouse' && e.button !== 0) return;
+                        this.swipe = { x: e.clientX, y: e.clientY, id: e.pointerId };
+                        try { this.canvas.setPointerCapture(e.pointerId); } catch (err) {}
+                    };
+                    const onPointerUp = (e) => {
+                        if (!this.swipe || this.swipe.id !== e.pointerId) return;
+                        const dx = e.clientX - this.swipe.x, dy = e.clientY - this.swipe.y;
+                        this.swipe = null;
+                        const dist = Math.hypot(dx, dy);
+                        if (dist < 24) { if (this.phase === 'title' || this.phase === 'dead') this.play(); return; }
+                        if (this.phase !== 'playing') return;
+                        if (Math.abs(dx) > Math.abs(dy)) this.steer(dx > 0 ? 'right' : 'left');
+                        else this.steer(dy > 0 ? 'down' : 'up');
+                    };
+                    const onPointerCancel = (e) => { if (this.swipe && this.swipe.id === e.pointerId) this.swipe = null; };
+
+                    window.addEventListener('keydown', onKeyDown);
+                    window.addEventListener('blur', onBlur);
+                    document.addEventListener('visibilitychange', onVis);
+                    window.addEventListener('resize', onResize);
+                    this.canvas.addEventListener('pointerdown', onPointerDown);
+                    this.canvas.addEventListener('pointerup', onPointerUp);
+                    this.canvas.addEventListener('pointercancel', onPointerCancel);
+
+                    this.unbind.push(() => {
+                        window.removeEventListener('keydown', onKeyDown);
+                        window.removeEventListener('blur', onBlur);
+                        document.removeEventListener('visibilitychange', onVis);
+                        window.removeEventListener('resize', onResize);
+                        this.canvas.removeEventListener('pointerdown', onPointerDown);
+                        this.canvas.removeEventListener('pointerup', onPointerUp);
+                        this.canvas.removeEventListener('pointercancel', onPointerCancel);
                     });
-                } else {
-                    // Fallback without GSAP: instant swap
-                    stage.style.setProperty('--soda-inner', target.inner);
-                    stage.style.setProperty('--soda-mid', target.mid);
-                    stage.style.setProperty('--soda-outer', target.outer);
-                    can.classList.toggle('zero-theme', toZero);
-                    subLabel.textContent = toZero ? 'Zero Lime' : 'Classic';
-                    berries.forEach(b => b.el.classList.toggle('zero', toZero));
-                    switching = false;
+                }
+
+                readSteerFromCode(code) {
+                    if (code === 'ArrowUp' || code === 'KeyW') this.steer('up');
+                    else if (code === 'ArrowDown' || code === 'KeyS') this.steer('down');
+                    else if (code === 'ArrowLeft' || code === 'KeyA') this.steer('left');
+                    else if (code === 'ArrowRight' || code === 'KeyD') this.steer('right');
+                }
+
+                resetBoard(attract) {
+                    const cx = Math.floor(COLS / 2), cy = Math.floor(ROWS / 2);
+                    this.snake = [{ x: cx, y: cy }, { x: cx - 1, y: cy }, { x: cx - 2, y: cy }];
+                    this.prevSnake = cloneCells(this.snake);
+                    this.dir = DIRS.right; this.queued = null;
+                    if (!attract) this.score = 0;
+                    this.grow = 0; this.acc = 0; this.tickProgress = 0;
+                    this.trauma = 0; this.hitstop = 0;
+                    this.combo = 0; this.comboTimer = 0;
+                    this.particles = []; this.floaters = [];
+                    this.tickInterval = SPEED_MS[this.save.speed];
+                    this.placeFood();
+                    if (attract) this.phase = 'title';
+                }
+
+                placeFood() {
+                    const taken = new Set(this.snake.map(c => `${c.x},${c.y}`));
+                    const free = [];
+                    for (let y = 0; y < ROWS; y++) for (let x = 0; x < COLS; x++) if (!taken.has(`${x},${y}`)) free.push({ x, y });
+                    this.food = free.length ? free[randInt(free.length)] : { x: 0, y: 0 };
+                }
+
+                intervalForScore() {
+                    const base = SPEED_MS[this.save.speed];
+                    if (this.save.speed === 'chill') return base;
+                    const step = this.save.speed === 'turbo' ? 1.5 : 1.0;
+                    return Math.max(55, base - this.score * step * 0.1);
+                }
+
+                update(dt) {
+                    this.time += dt;
+                    this.updateFx(dt);
+                    if (this.phase === 'paused') return;
+                    if (this.hitstop > 0) { this.hitstop -= dt; return; }
+                    if (this.phase === 'dead') return;
+
+                    if (this.phase === 'playing' && this.combo > 0) {
+                        this.comboTimer -= dt;
+                        if (this.comboTimer <= 0) { this.combo = 0; this.emitHud(); }
+                    }
+
+                    if (this.phase === 'title') this.attractAi();
+                    this.tickInterval = this.phase === 'title' ? 150 : this.intervalForScore();
+                    this.acc += dt * 1000;
+                    while (this.acc >= this.tickInterval) { this.acc -= this.tickInterval; this.step(); }
+                    this.tickProgress = this.reducedMotion ? 1 : Math.min(1, this.acc / this.tickInterval);
+                }
+
+                attractAi() {
+                    const head = this.snake[0];
+                    const options = ['up', 'down', 'left', 'right'];
+                    const scored = [];
+                    for (const name of options) {
+                        const dir = DIRS[name];
+                        if (this.snake.length > 1 && opposite(this.dir, dir)) continue;
+                        let nx = head.x + dir.x, ny = head.y + dir.y;
+                        if (this.save.wrap) { nx = wrapv(nx, COLS); ny = wrapv(ny, ROWS); }
+                        if (!this.save.wrap && (nx < 0 || ny < 0 || nx >= COLS || ny >= ROWS)) continue;
+                        if (this.snake.some((c, i) => i !== this.snake.length - 1 && c.x === nx && c.y === ny)) continue;
+                        const d = Math.abs(nx - this.food.x) + Math.abs(ny - this.food.y);
+                        scored.push({ name, d });
+                    }
+                    scored.sort((a, b) => a.d - b.d);
+                    if (scored[0]) this.queued = DIRS[scored[0].name];
+                }
+
+                step() {
+                    this.dir = this.queued || this.dir;
+                    this.queued = null;
+                    this.prevSnake = cloneCells(this.snake);
+                    const head = this.snake[0];
+                    let nx = head.x + this.dir.x, ny = head.y + this.dir.y;
+                    if (this.save.wrap) { nx = wrapv(nx, COLS); ny = wrapv(ny, ROWS); }
+                    else if (nx < 0 || ny < 0 || nx >= COLS || ny >= ROWS) { this.die(); return; }
+                    const hitSelf = this.snake.some((c, i) => {
+                        if (i === this.snake.length - 1 && this.grow <= 0) return false;
+                        return c.x === nx && c.y === ny;
+                    });
+                    if (hitSelf) { this.die(); return; }
+                    this.snake.unshift({ x: nx, y: ny });
+                    if (nx === this.food.x && ny === this.food.y) {
+                        this.grow += 1;
+                        if (this.phase === 'playing') {
+                            const prevTier = tierFor(Math.max(1, this.combo));
+                            this.combo += 1;
+                            this.comboTimer = COMBO_WINDOW;
+                            const tier = tierFor(this.combo);
+                            const mult = multiplierFor(this.combo);
+                            const gained = 10 * mult;
+                            this.score += gained;
+                            if (this.score > this.save.highScore) this.save.highScore = this.score;
+                            this.persist();
+                            if (tier > prevTier && this.combo > 1) this.audio.comboUp(tier);
+                            else this.audio.eat(tier);
+                            if (!this.reducedMotion) { this.hitstop = 0.04; this.addTrauma(0.22 + tier * 0.03); }
+                            this.burst(nx, ny, tier, this.combo >= 3 ? 20 : 12);
+                            this.floaters.push({ x: nx, y: ny, text: mult > 1 ? `+${gained} ×${mult}` : `+${gained}`, life: 0.75, maxLife: 0.75, color: TIER_COLORS[tier] });
+                            if (this.onFlash) this.onFlash();
+                            this.emitHud();
+                        }
+                        this.placeFood();
+                    }
+                    if (this.grow > 0) this.grow -= 1; else this.snake.pop();
+                }
+
+                die() {
+                    if (this.phase === 'title') { this.resetBoard(true); return; }
+                    this.phase = 'dead'; this.audio.die();
+                    if (!this.reducedMotion) this.addTrauma(0.8);
+                    const head = this.snake[0];
+                    this.burst(head.x, head.y, TIER_COLORS.length - 1, 28);
+                    this.emitHud();
+                }
+
+                addTrauma(amount) { if (!this.save.shake || this.reducedMotion) return; this.trauma = Math.min(1, this.trauma + amount); }
+                burst(cx, cy, tier, n) { for (let i = 0; i < n; i++) this.spawnParticle(cx + 0.5, cy + 0.5, tier); }
+                spawnParticle(x, y, tier) {
+                    let slot = this.particles.find(p => !p.alive);
+                    if (!slot) {
+                        if (this.particles.length >= PARTICLE_CAP) return;
+                        slot = { x: 0, y: 0, vx: 0, vy: 0, life: 0, maxLife: 1, size: 1, color: TIER_COLORS[0], alive: false };
+                        this.particles.push(slot);
+                    }
+                    const ang = Math.random() * Math.PI * 2;
+                    const spd = 1.4 + Math.random() * 3.6;
+                    slot.x = x; slot.y = y;
+                    slot.vx = Math.cos(ang) * spd; slot.vy = Math.sin(ang) * spd;
+                    slot.life = 0.35 + Math.random() * 0.4;
+                    slot.maxLife = slot.life;
+                    slot.size = 0.1 + Math.random() * 0.15;
+                    slot.color = TIER_COLORS[tier] || TIER_COLORS[0];
+                    slot.alive = true;
+                }
+
+                updateFx(dt) {
+                    this.trauma = Math.max(0, this.trauma - dt * 2.0);
+                    this.dustClock += dt;
+                    if (this.dustClock > 0.3 && this.phase === 'playing' && !this.reducedMotion) {
+                        this.dustClock = 0;
+                        this.spawnParticle(Math.random() * COLS, Math.random() * ROWS, 0);
+                        const s = this.particles[this.particles.length - 1];
+                        if (s) { s.size *= 0.4; s.life = 1.2 + Math.random(); s.maxLife = s.life; s.vx *= 0.15; s.vy *= 0.15; s.color = 'rgba(148,163,184,0.35)'; }
+                    }
+                    for (const p of this.particles) {
+                        if (!p.alive) continue;
+                        p.life -= dt; p.x += p.vx * dt; p.y += p.vy * dt; p.vx *= 0.94; p.vy *= 0.94;
+                        if (p.life <= 0) p.alive = false;
+                    }
+                    for (let i = this.floaters.length - 1; i >= 0; i--) {
+                        const f = this.floaters[i]; f.life -= dt;
+                        if (f.life <= 0) this.floaters.splice(i, 1);
+                    }
+                }
+
+                resize() {
+                    const parent = this.canvas.parentElement;
+                    const css = parent ? Math.min(parent.clientWidth, parent.clientHeight) : 480;
+                    const size = Math.max(240, css || 480);
+                    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+                    this.canvas.style.width = `${size}px`;
+                    this.canvas.style.height = `${size}px`;
+                    this.canvas.width = Math.floor(size * dpr);
+                    this.canvas.height = Math.floor(size * dpr);
+                }
+
+                cellSize() { return this.canvas.width / COLS; }
+
+                interpCell(i) {
+                    const to = this.snake[i] || this.snake[this.snake.length - 1];
+                    const from = this.prevSnake[i] || this.prevSnake[this.prevSnake.length - 1] || to;
+                    const dx = to.x - from.x, dy = to.y - from.y;
+                    if (Math.abs(dx) > 1 || Math.abs(dy) > 1) return { x: to.x, y: to.y };
+                    const t = this.phase === 'dead' ? 1 : this.tickProgress;
+                    return { x: from.x + dx * t, y: from.y + dy * t };
+                }
+
+                draw() {
+                    const ctx = this.ctx, w = this.canvas.width, h = this.canvas.height, cs = this.cellSize(), t = this.time;
+                    ctx.setTransform(1, 0, 0, 1, 0, 0);
+                    ctx.clearRect(0, 0, w, h);
+                    ctx.fillStyle = '#03040a';
+                    ctx.fillRect(0, 0, w, h);
+
+                    const shake = this.trauma * this.trauma;
+                    if (shake > 0) {
+                        const mag = shake * cs * 0.2;
+                        ctx.translate((Math.random() * 2 - 1) * mag, (Math.random() * 2 - 1) * mag);
+                    }
+
+                    // grid
+                    ctx.strokeStyle = 'rgba(79,140,255,0.06)';
+                    ctx.lineWidth = Math.max(1, cs * 0.016);
+                    ctx.beginPath();
+                    for (let i = 1; i < COLS; i++) { ctx.moveTo(i * cs, 0); ctx.lineTo(i * cs, h); }
+                    for (let j = 1; j < ROWS; j++) { ctx.moveTo(0, j * cs); ctx.lineTo(w, j * cs); }
+                    ctx.stroke();
+
+                    // soft moving scan band (premium ambience, cheap to draw)
+                    const bandY = ((t * 0.06) % 1.4 - 0.2) * h;
+                    const bandGrad = ctx.createLinearGradient(0, bandY - h * 0.18, 0, bandY + h * 0.18);
+                    bandGrad.addColorStop(0, 'rgba(79,140,255,0)');
+                    bandGrad.addColorStop(0.5, 'rgba(79,140,255,0.045)');
+                    bandGrad.addColorStop(1, 'rgba(79,140,255,0)');
+                    ctx.fillStyle = bandGrad;
+                    ctx.fillRect(0, 0, w, h);
+
+                    this.drawFood(cs, t);
+                    this.drawSnake(cs, t);
+                    this.drawParticles(cs);
+                    this.drawFloaters(cs);
+
+                    // vignette
+                    const vg = ctx.createRadialGradient(w / 2, h / 2, w * 0.2, w / 2, h / 2, w * 0.72);
+                    vg.addColorStop(0, 'rgba(0,0,0,0)'); vg.addColorStop(1, 'rgba(0,0,0,0.45)');
+                    ctx.fillStyle = vg; ctx.fillRect(0, 0, w, h);
+
+                    // scanlines
+                    if (!this.reducedMotion) {
+                        ctx.globalAlpha = 0.05;
+                        ctx.fillStyle = '#000';
+                        const step = Math.max(2, Math.floor(cs * 0.12));
+                        for (let y = 0; y < h; y += step * 2) ctx.fillRect(0, y, w, step);
+                        ctx.globalAlpha = 1;
+                    }
+                }
+
+                drawFood(cs, t) {
+                    const ctx = this.ctx;
+                    const pulse = this.reducedMotion ? 1 : 0.86 + Math.sin(t * 4.4) * 0.14;
+                    const x = (this.food.x + 0.5) * cs, y = (this.food.y + 0.5) * cs;
+                    const r = cs * 0.3 * pulse;
+
+                    // orbiting sparkles
+                    if (!this.reducedMotion) {
+                        for (let i = 0; i < 3; i++) {
+                            const a = t * 2.4 + (i * Math.PI * 2) / 3;
+                            const ox = Math.cos(a) * r * 1.9, oy = Math.sin(a) * r * 1.9;
+                            ctx.beginPath();
+                            ctx.fillStyle = 'rgba(244,114,182,0.55)';
+                            ctx.arc(x + ox, y + oy, cs * 0.03, 0, Math.PI * 2);
+                            ctx.fill();
+                        }
+                    }
+
+                    ctx.save();
+                    ctx.translate(x, y);
+                    ctx.shadowColor = '#f472b6';
+                    ctx.shadowBlur = cs * 0.5;
+                    const grad = ctx.createRadialGradient(0, 0, 0, 0, 0, r);
+                    grad.addColorStop(0, '#fff6fb');
+                    grad.addColorStop(0.45, '#f9a8d4');
+                    grad.addColorStop(1, '#db2777');
+                    ctx.fillStyle = grad;
+                    ctx.beginPath();
+                    ctx.arc(0, 0, r, 0, Math.PI * 2);
+                    ctx.fill();
+                    ctx.restore();
+                }
+
+                drawSnake(cs, t) {
+                    const ctx = this.ctx; const n = this.snake.length;
+                    const tier = tierFor(Math.max(1, this.combo));
+                    const headColor = TIER_COLORS[tier];
+                    const tailColor = '#0f2547';
+
+                    for (let i = n - 1; i >= 0; i--) {
+                        const c = this.interpCell(i);
+                        const k = n === 1 ? 1 : 1 - i / (n - 1);
+                        const radius = cs * (0.26 + k * 0.2);
+                        const x = (c.x + 0.5) * cs, y = (c.y + 0.5) * cs;
+                        const color = lerpColor(tailColor, headColor, k);
+                        ctx.save();
+                        ctx.shadowColor = headColor;
+                        ctx.shadowBlur = cs * (0.12 + k * 0.35);
+                        ctx.beginPath();
+                        ctx.fillStyle = color;
+                        ctx.arc(x, y, radius, 0, Math.PI * 2);
+                        ctx.fill();
+                        ctx.restore();
+                    }
+
+                    const head = this.interpCell(0);
+                    const hx = (head.x + 0.5) * cs, hy = (head.y + 0.5) * cs;
+                    ctx.save();
+                    ctx.shadowColor = headColor;
+                    ctx.shadowBlur = cs * 0.55;
+                    ctx.beginPath();
+                    ctx.fillStyle = '#f4fbff';
+                    ctx.arc(hx, hy, cs * 0.32, 0, Math.PI * 2);
+                    ctx.fill();
+                    ctx.restore();
+
+                    const ang = Math.atan2(this.dir.y, this.dir.x);
+                    const blink = this.reducedMotion ? 1 : 0.85 + Math.sin(t * 3) * 0.15;
+                    this.drawEye(hx, hy, ang, -1, cs, blink);
+                    this.drawEye(hx, hy, ang, 1, cs, blink);
+                }
+
+                drawEye(hx, hy, ang, side, cs, blink) {
+                    const ctx = this.ctx;
+                    const ox = Math.cos(ang) * cs * 0.15 - Math.sin(ang) * cs * 0.15 * side;
+                    const oy = Math.sin(ang) * cs * 0.15 + Math.cos(ang) * cs * 0.15 * side;
+                    ctx.beginPath(); ctx.fillStyle = '#03040a';
+                    ctx.ellipse(hx + ox, hy + oy, cs * 0.05, cs * 0.065 * blink, ang, 0, Math.PI * 2); ctx.fill();
+                }
+
+                drawParticles(cs) {
+                    const ctx = this.ctx;
+                    for (const p of this.particles) {
+                        if (!p.alive) continue;
+                        const a = Math.max(0, p.life / p.maxLife);
+                        ctx.globalAlpha = a;
+                        ctx.fillStyle = p.color;
+                        ctx.beginPath(); ctx.arc(p.x * cs, p.y * cs, p.size * cs, 0, Math.PI * 2); ctx.fill();
+                    }
+                    ctx.globalAlpha = 1;
+                }
+
+                drawFloaters(cs) {
+                    const ctx = this.ctx;
+                    ctx.font = `700 ${Math.max(11, cs * 0.34)}px 'JetBrains Mono', ui-monospace, monospace`;
+                    ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+                    for (const f of this.floaters) {
+                        const k = 1 - f.life / f.maxLife;
+                        ctx.globalAlpha = Math.max(0, f.life / f.maxLife);
+                        ctx.fillStyle = f.color || '#f4f4f5';
+                        ctx.fillText(f.text, (f.x + 0.5) * cs, (f.y - k * 1.0 + 0.2) * cs);
+                    }
+                    ctx.globalAlpha = 1;
                 }
             }
 
-            cards.forEach(card => {
-                card.addEventListener('click', () => {
-                    if (switching) return;
-                    cards.forEach(c => c.classList.remove('active'));
-                    card.classList.add('active');
-                    switchFlavor(card.dataset.flavor);
+            // ---------------- UI wiring ----------------
+            const scoreEl = document.getElementById('pulse-score');
+            const bestEl = document.getElementById('pulse-best');
+            const comboWrap = document.getElementById('pulse-combo-wrap');
+            const comboEl = document.getElementById('pulse-combo');
+            const muteBtn = document.getElementById('pulse-mute');
+            const pauseBtn = document.getElementById('pulse-pause');
+            const overlay = document.getElementById('pulse-overlay');
+            const cardEl = document.getElementById('pulse-card');
+            const dpad = document.getElementById('pulse-dpad');
+
+            const game = new PulseGame(canvas, renderHud);
+            game.onFlash = () => {
+                stageEl.classList.add('is-flash');
+                setTimeout(() => stageEl.classList.remove('is-flash'), 160);
+            };
+            game.start();
+
+            root.addEventListener('mouseenter', () => { game.inputActive = true; });
+            root.addEventListener('mouseleave', () => { game.inputActive = false; });
+            canvas.addEventListener('focus', () => { game.inputActive = true; });
+            canvas.addEventListener('blur', () => { game.inputActive = false; });
+            canvas.addEventListener('mousedown', () => canvas.focus());
+            canvas.addEventListener('touchstart', () => { game.inputActive = true; }, { passive: true });
+
+            dpad.querySelectorAll('button[data-dir]').forEach(btn => {
+                btn.addEventListener('pointerdown', (e) => {
+                    e.preventDefault();
+                    game.audio.unlock();
+                    if (game.phase === 'title' || game.phase === 'dead') { game.play(); return; }
+                    game.steer(btn.dataset.dir);
                 });
             });
+
+            muteBtn.addEventListener('click', () => game.setMuted(!game.snapshot().muted));
+            pauseBtn.addEventListener('click', () => game.togglePause());
+
+            function pad4(n) { return String(n).padStart(4, '0'); }
+
+            function renderHud(hud) {
+                scoreEl.textContent = pad4(hud.score);
+                bestEl.textContent = pad4(hud.highScore);
+                muteBtn.innerHTML = hud.muted ? '<i class="fas fa-volume-xmark"></i>' : '<i class="fas fa-volume-high"></i>';
+                pauseBtn.hidden = hud.phase !== 'playing' && hud.phase !== 'paused';
+                pauseBtn.innerHTML = hud.phase === 'paused' ? '<i class="fas fa-play"></i>' : '<i class="fas fa-pause"></i>';
+
+                if (hud.phase === 'playing' && hud.combo >= 2) {
+                    comboWrap.hidden = false;
+                    comboEl.textContent = '×' + hud.multiplier;
+                } else {
+                    comboWrap.hidden = true;
+                }
+
+                if (hud.phase === 'playing') {
+                    overlay.classList.add('is-hidden');
+                    return;
+                }
+                overlay.classList.remove('is-hidden');
+
+                if (hud.phase === 'title') {
+                    cardEl.innerHTML = `
+                        <span class="pulse-tag">Portfolio Arcade</span>
+                        <h5>PULSE</h5>
+                        <p>Chain food fast to build combo multipliers — up to ×5. Canvas-rendered, glow trails, procedural sound.</p>
+                        ${hud.highScore > 0 ? `<p style="font-family:'JetBrains Mono',monospace;font-size:0.72rem;color:#71717a;margin-top:0.4rem;">Best ${pad4(hud.highScore)}</p>` : ''}
+                        <div class="pulse-btn-row">
+                            <button type="button" class="pulse-btn pulse-btn-primary" id="pulse-play-btn"><i class="fas fa-play"></i>&nbsp; Play</button>
+                            <button type="button" class="pulse-btn pulse-btn-secondary" id="pulse-settings-btn">Settings</button>
+                        </div>
+                        <p style="font-family:'JetBrains Mono',monospace;font-size:0.68rem;color:#71717a;margin-top:0.8rem;">WASD or arrows. Swipe on touch.</p>
+                    `;
+                    cardEl.querySelector('#pulse-play-btn').addEventListener('click', () => game.play());
+                    cardEl.querySelector('#pulse-settings-btn').addEventListener('click', () => renderSettings());
+                } else if (hud.phase === 'paused') {
+                    cardEl.innerHTML = `
+                        <h5>Paused</h5>
+                        <p>Hold here as long as you like — the pulse waits.</p>
+                        <div class="pulse-btn-row">
+                            <button type="button" class="pulse-btn pulse-btn-primary" id="pulse-resume-btn">Resume</button>
+                            <button type="button" class="pulse-btn pulse-btn-secondary" id="pulse-settings-btn">Settings</button>
+                        </div>
+                    `;
+                    cardEl.querySelector('#pulse-resume-btn').addEventListener('click', () => game.resume());
+                    cardEl.querySelector('#pulse-settings-btn').addEventListener('click', () => renderSettings());
+                } else if (hud.phase === 'dead') {
+                    const record = hud.score > 0 && hud.score >= hud.highScore;
+                    cardEl.innerHTML = `
+                        <span class="pulse-tag">Run over</span>
+                        <h5>${record ? 'New best' : 'Pulse lost'}</h5>
+                        <div class="pulse-score-grid">
+                            <div class="pulse-score-box"><span>Score</span><strong>${pad4(hud.score)}</strong></div>
+                            <div class="pulse-score-box"><span>Best</span><strong>${pad4(hud.highScore)}</strong></div>
+                        </div>
+                        <div class="pulse-btn-row">
+                            <button type="button" class="pulse-btn pulse-btn-primary" id="pulse-play-btn">Play again</button>
+                        </div>
+                    `;
+                    cardEl.querySelector('#pulse-play-btn').addEventListener('click', () => game.play());
+                }
+            }
+
+            function renderSettings() {
+                const hud = game.snapshot();
+                cardEl.innerHTML = `
+                    <h5>Settings</h5>
+                    <div class="pulse-field">
+                        <span class="pulse-field-label">Speed</span>
+                        <div class="pulse-speed-row">
+                            ${['chill', 'classic', 'turbo'].map(id => `<button type="button" class="pulse-speed-btn${hud.speed === id ? ' active' : ''}" data-speed="${id}">${id}</button>`).join('')}
+                        </div>
+                    </div>
+                    <label class="pulse-toggle-row">
+                        <span>Wrap walls</span>
+                        <input type="checkbox" id="pulse-wrap-toggle" ${hud.wrap ? 'checked' : ''}>
+                    </label>
+                    <label class="pulse-toggle-row">
+                        <span>Screen shake</span>
+                        <input type="checkbox" id="pulse-shake-toggle" ${hud.shake ? 'checked' : ''}>
+                    </label>
+                    <div class="pulse-btn-row">
+                        <button type="button" class="pulse-btn pulse-btn-primary" id="pulse-done-btn">Done</button>
+                    </div>
+                `;
+                cardEl.querySelectorAll('[data-speed]').forEach(btn => {
+                    btn.addEventListener('click', () => { game.setSpeed(btn.dataset.speed); renderSettings(); });
+                });
+                cardEl.querySelector('#pulse-wrap-toggle').addEventListener('change', (e) => game.setWrap(e.target.checked));
+                cardEl.querySelector('#pulse-shake-toggle').addEventListener('change', (e) => game.setShake(e.target.checked));
+                cardEl.querySelector('#pulse-done-btn').addEventListener('click', () => renderHud(game.snapshot()));
+            }
         })();
+
 
 
     </script>
