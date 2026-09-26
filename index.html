@@ -842,15 +842,18 @@
                     <div class="absolute inset-0 bg-blue-500 rounded-full blur-3xl opacity-20"></div>
 
                     <div class="profile-frame">
-                        <img
-                            src="images/profile.png"
-                            alt="Yuri Olorunfemi"
-                            class="profile-img"
-                            width="176" height="176"
-                            loading="eager"
-                            fetchpriority="high"
-                            decoding="async"
-                            onload="this.classList.add('is-loaded')">
+                        <picture>
+                            <source srcset="images/profile.webp" type="image/webp">
+                            <img
+                                src="images/profile.jpg"
+                                alt="Yuri Olorunfemi"
+                                class="profile-img"
+                                width="176" height="176"
+                                loading="eager"
+                                fetchpriority="high"
+                                decoding="async"
+                                onload="this.classList.add('is-loaded')">
+                        </picture>
                     </div>
 
                     <div class="orbit orbit-a" aria-hidden="true">
